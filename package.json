@@ -1,0 +1,46 @@
+{
+    "name": "growthackr",
+    "displayName": "Growthackr",
+    "version": "1.0.0",
+    "description": "Take control of your time and start being productive. Track social media usage and develop good habits",
+    "license": "MIT",
+    "author": {
+        "name": "Nikhil Verma",
+        "email": "nikhil2003verma@gmail.com"
+    },
+    "scripts": {
+        "lint": "eslint . --fix -c .eslintrc --ext js,ts --ignore-pattern='!.*'",
+        "devdist": "nodemon",
+        "dev": "vite build -w",
+        "build": "tsc --noEmit && vite build",
+        "test": "jest"
+    },
+    "type": "module",
+    "dependencies": {
+        "solid-js": "^1.6.2"
+    },
+    "devDependencies": {
+        "@crxjs/vite-plugin": "2.0.0-beta.7",
+        "@types/chrome": "0.0.203",
+        "@types/jest": "^29.2.3",
+        "@types/node": "18.11.10",
+        "@typescript-eslint/eslint-plugin": "5.45.0",
+        "@typescript-eslint/parser": "5.45.0",
+        "autoprefixer": "^10.4.13",
+        "babel-preset-solid": "^1.6.2",
+        "eslint": "8.29.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "6.6.1",
+        "eslint-plugin-solid": "^0.9.1",
+        "fs-extra": "11.1.0",
+        "jest": "^29.3.1",
+        "jest-environment-jsdom": "^29.3.1",
+        "nodemon": "2.0.20",
+        "ts-jest": "^29.0.3",
+        "ts-loader": "9.4.2",
+        "ts-node": "10.9.1",
+        "typescript": "4.9.3",
+        "vite": "3.2.4",
+        "vite-plugin-solid": "^2.4.0"
+    }
+}
