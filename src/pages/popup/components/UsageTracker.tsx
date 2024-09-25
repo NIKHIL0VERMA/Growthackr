@@ -1,5 +1,8 @@
 import { createSignal, For } from 'solid-js'
-import { RadialProgressBar } from './customProgress/RadialProgressBar'
+import Speedometer from './customProgress/Speedometer'
+import Background from './customProgress/Background'
+import Progress from './customProgress/Progress'
+import Arc from './customProgress/Arc'
 
 export function UsageTracker({ setCurrentView }) {
   const [platforms] = createSignal([
@@ -15,11 +18,15 @@ export function UsageTracker({ setCurrentView }) {
         <For each={platforms()}>
           {(platform) => (
             <div class="platform-item">
-              <RadialProgressBar
+              <Speedometer
                 value={platform.usage}
                 max={platform.limit}
-                label={platform.name[0]}
-              />
+                // label={platform.name[0]}
+              >
+                <Background/>
+                <Arc arcWidth={4}/>
+                <Progress arcWidth={10}/>
+              </Speedometer>
               <p>{platform.name}</p>
             </div>
           )}
