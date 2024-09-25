@@ -1,8 +1,8 @@
-import { SVGAttributes, useContext, useMemo } from 'react'
+import { useContext, createMemo, JSX } from 'solid-js'
 import Context from './context'
 import { getCirclePath } from './utils'
 
-interface BackgroundProps extends SVGAttributes<SVGPathElement> {
+interface BackgroundProps extends JSX.UseSVGAttributes<SVGPathElement> {
   angle?: number
   color?: string
   opacity?: number
@@ -18,7 +18,7 @@ export default function Background({
   const { rotation, radius } = useContext(Context)
   const backgroundStart = rotation + angle / 2
 
-  const backgroundPath = useMemo(() => getCirclePath(
+  const backgroundPath = createMemo(() => getCirclePath(
     radius,
     radius,
     radius,
@@ -28,9 +28,9 @@ export default function Background({
 
   return (
     <path
-      d={backgroundPath}
+      d={backgroundPath()}
       fill={color}
-      fillOpacity={opacity}
+      fill-opacity={opacity}
       {...rest}
     />
   )

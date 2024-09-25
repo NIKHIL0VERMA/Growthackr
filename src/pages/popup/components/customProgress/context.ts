@@ -1,5 +1,4 @@
-import { createContext, SVGAttributes } from 'react'
-
+import { createContext, JSX} from 'solid-js'
 interface ContextProps {
   currentFillAngle: number
   radius: number
@@ -7,7 +6,7 @@ interface ContextProps {
   min: number
   max: number
   angle: number
-  lineCap: SVGAttributes<SVGPathElement>['strokeLinecap']
+  lineCap: JSX.UseSVGAttributes<SVGElement>['stroke-linecap'];
   accentColor: string
   fontFamily: string
   value: number

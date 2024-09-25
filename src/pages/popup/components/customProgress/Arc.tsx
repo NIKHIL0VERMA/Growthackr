@@ -1,14 +1,12 @@
-
-
-import { SVGAttributes, useContext, useMemo } from 'react'
+import { JSX, useContext, createMemo } from 'solid-js'
 import Context from './context'
 import { getCirclePath } from './utils'
 
-interface ArcProps extends SVGAttributes<SVGPathElement> {
+interface ArcProps extends JSX.UseSVGAttributes<SVGPathElement> {
   color?: string
   opacity?: number
   arcWidth?: number
-  lineCap?: SVGAttributes<SVGPathElement>['strokeLinecap']
+  lineCap?: JSX.UseSVGAttributes<SVGPathElement>['stroke-linecap']
 }
 
 export default function Arc({
@@ -25,7 +23,7 @@ export default function Arc({
     angle,
   } = useContext(Context)
 
-  const secondaryPath = useMemo(() => getCirclePath(
+  const secondaryPath = createMemo(() => getCirclePath(
     radius,
     radius,
     radius - arcWidth / 2,
@@ -35,11 +33,11 @@ export default function Arc({
 
   return (
     <path
-      d={secondaryPath}
+      d={secondaryPath()}
       stroke={color}
-      strokeOpacity={opacity}
-      strokeWidth={arcWidth}
-      strokeLinecap={lineCap || globalLineCap}
+      stroke-opacity={opacity}
+      stroke-width={arcWidth}
+      stroke-linecap={lineCap || globalLineCap}
       fill='transparent'
       {...rest}
     />
