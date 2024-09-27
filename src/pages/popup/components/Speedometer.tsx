@@ -1,133 +1,134 @@
 import { createSignal, onCleanup, onMount } from 'solid-js';
 
 function Speedometer(props) {
-  const canvasId = 'progressbar';
   const [currentValue, setCurrentValue] = createSignal(props.value || props.min);
+  const isUserInput = props.isUserInput || false;
+  let logo; // Declare logo variable here
 
-  const drawSpeedometer = (min, max, value, text) => {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext('2d');
-    const width = 600;
-    const x = 400;
-    const y = 400;
-    const radius = 300;
-    const minRad = 0.75 * Math.PI; // Starting angle
-    const maxRad = 2.25 * Math.PI; // Ending angle
-    const valueRange = max - min;
-    const valueRad = ((value - min) / valueRange) * (maxRad - minRad) + minRad;
+  const drawSpeedometer = (value, text) => {
+    const canvas = document.getElementById(props.text) as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
 
-    const toolTipWidth = 100;
-    const toolTipHeight = 60;
-    const toolTipArrowHeight = 30;
+    const size = props.width || 250; // Use width for both dimensions to maintain 1:1
+    canvas.width = size;
+    canvas.height = size;
 
-    // Create gradient
-    const grd = ctx.createLinearGradient(x - radius, 0, x - radius + width, 0);
-    grd.addColorStop(0, "#B5D333");
-    grd.addColorStop(0.25, "#36B0AC");
-    grd.addColorStop(0.5, "#4F71B7");
-    grd.addColorStop(0.75, "#36B0AC");
-    grd.addColorStop(1, "#B5D333");
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    const radius = size / 3; // Dynamic radius
+    const lineWidthBg = radius * 0.2; // Background stroke size
+    const lineWidthFg = radius * 0.15; // Foreground stroke size
+    const minRad = 0.75 * Math.PI;
+    const maxRad = 2.25 * Math.PI;
+    const valueRange = props.max - props.min;
+    const valueRad = ((value - props.min) / valueRange) * (maxRad - minRad) + minRad;
 
-    const grd2 = ctx.createLinearGradient(0, 0, toolTipWidth, 0);
-    grd2.addColorStop(0, "white");
-    grd2.addColorStop(1, "#D8D8D8");
+    // Get colors from CSS
+    const bgColor = getComputedStyle(canvas).getPropertyValue('--bg-color') || "grey";
+    const fgColor = getComputedStyle(canvas).getPropertyValue('--fg-color') || "purple";
+    const textColor = getComputedStyle(canvas).getPropertyValue('--text-color') || "#155D9B";
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Background
     ctx.beginPath();
     ctx.arc(x, y, radius, minRad, maxRad);
-    ctx.lineWidth = 50;
+    ctx.lineWidth = lineWidthBg;
     ctx.lineCap = "round";
-    ctx.strokeStyle = "grey";
+    ctx.strokeStyle = bgColor;
     ctx.stroke();
 
     // Foreground
     ctx.beginPath();
     ctx.arc(x, y, radius, minRad, valueRad);
-    ctx.lineWidth = 40;
+    ctx.lineWidth = lineWidthFg;
     ctx.lineCap = "round";
-    ctx.strokeStyle = grd;
+    ctx.strokeStyle = fgColor;
     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.translate(x, y);
-    ctx.rotate(valueRad);
-    ctx.rect(radius + toolTipArrowHeight, -toolTipWidth / 2, toolTipHeight, toolTipWidth);
-    ctx.moveTo(radius + toolTipArrowHeight, -toolTipWidth / 2);
-    ctx.lineTo(radius, 0);
-    ctx.lineTo(radius + toolTipArrowHeight, toolTipWidth / 2);
-    ctx.fillStyle = grd2;
-    ctx.fill();
-
-    ctx.rotate(0.5 * Math.PI);
+    // Set dynamic font size
+    const fontSize = size * 0.05; // 5% of size
     ctx.textAlign = "center";
-    ctx.font = "30px Helvetica";
-    ctx.fillStyle = "#155D9B";
-    ctx.fillText(text, 0, -radius - toolTipArrowHeight - (toolTipHeight / 4));
+    ctx.font = `${fontSize}px Helvetica`;
+    ctx.fillStyle = textColor;
+
+    // Adjust padding by 50%
+    const padding = fontSize * 0.25; // Reduced padding to 25% of font size
+
+    // Draw the logo if present
+    if (logo) {
+      ctx.drawImage(logo, x - logo.width / 2, y - logo.height / 2);
+      ctx.fillText(text, x, y + logo.height / 2 + padding + fontSize); // Text below the logo
+    } else {
+      ctx.fillText(text, x, y); // Center text if no logo
+    }
   };
 
   const updateValueFromMouse = (mouseX, mouseY) => {
-    const canvas = document.getElementById(canvasId);
+    const canvas = document.getElementById(props.text);
     const rect = canvas.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    const dx = mouseX - x;
-    const dy = mouseY - y;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = mouseX - centerX;
+    const dy = mouseY - centerY;
     const angle = Math.atan2(dy, dx);
-    
+
     const minRad = 0.75 * Math.PI;
     const maxRad = 2.25 * Math.PI;
     const valueRange = props.max - props.min;
 
-    // Clamp angle to min and max radians
     const clampedAngle = Math.max(minRad, Math.min(maxRad, angle));
-
-    // Calculate new value based on angle
     const newValue = ((clampedAngle - minRad) / (maxRad - minRad)) * valueRange + props.min;
-    setCurrentValue(Math.round(newValue)); // Update current value
-    drawSpeedometer(props.min, props.max, Math.round(newValue), `${Math.round(newValue)}%`); // Redraw
+    setCurrentValue(Math.round(newValue));
+    drawSpeedometer(Math.round(newValue), `${Math.round(newValue)}%`); // Pass the value and text
   };
 
   onMount(() => {
-    drawSpeedometer(props.min, props.max, currentValue(), `${currentValue()}%`);
+    logo = new Image(); // Assign logo here
+    logo.src = props.logo;
 
-    const canvas = document.getElementById(canvasId);
-
-    const onMouseMove = (e) => {
-      if (isDragging) {
-        updateValueFromMouse(e.clientX, e.clientY);
-      }
+    logo.onload = () => {
+      drawSpeedometer(currentValue(), isUserInput ? "Adjust Value" : props.text);
     };
 
-    const onMouseDown = (e) => {
-      isDragging = true;
-      updateValueFromMouse(e.clientX, e.clientY);
-    };
-
-    const onMouseUp = () => {
-      isDragging = false;
-    };
+    drawSpeedometer(currentValue(), isUserInput ? "Adjust Value" : props.text);
 
     let isDragging = false;
 
-    canvas.addEventListener('mousedown', onMouseDown);
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mouseup', onMouseUp);
-    canvas.addEventListener('mouseleave', onMouseUp);
+    if (isUserInput) {
+      const canvas = document.getElementById(props.text);
 
-    // Cleanup event listeners on component unmount
-    onCleanup(() => {
-      canvas.removeEventListener('mousedown', onMouseDown);
-      canvas.removeEventListener('mousemove', onMouseMove);
-      canvas.removeEventListener('mouseup', onMouseUp);
-      canvas.removeEventListener('mouseleave', onMouseUp);
-    });
+      const onMouseMove = (e) => {
+        if (isDragging) {
+          updateValueFromMouse(e.clientX, e.clientY);
+        }
+      };
+
+      const onMouseDown = (e) => {
+        isDragging = true;
+        updateValueFromMouse(e.clientX, e.clientY);
+      };
+
+      const onMouseUp = () => {
+        isDragging = false;
+      };
+
+      canvas.addEventListener('mousedown', onMouseDown);
+      canvas.addEventListener('mousemove', onMouseMove);
+      canvas.addEventListener('mouseup', onMouseUp);
+      canvas.addEventListener('mouseleave', onMouseUp);
+
+      onCleanup(() => {
+        canvas.removeEventListener('mousedown', onMouseDown);
+        canvas.removeEventListener('mousemove', onMouseMove);
+        canvas.removeEventListener('mouseup', onMouseUp);
+        canvas.removeEventListener('mouseleave', onMouseUp);
+      });
+    }
   });
 
   return (
-    <canvas id={canvasId} width="800" height="700" style="border:1px solid #d3d3d3;">
+    <canvas id={props.text}>
       Your browser does not support the HTML5 canvas tag.
     </canvas>
   );
