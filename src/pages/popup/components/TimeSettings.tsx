@@ -1,6 +1,6 @@
 import { createSignal, For } from 'solid-js'
 
-export function TimeSettings({ setCurrentView }) {
+export function TimeSettings({ darkMode, setCurrentView }) {
   const [platforms] = createSignal(['Instagram', 'Youtube', 'Facebook'])
   const [selectedPlatforms, setSelectedPlatforms] = createSignal([])
   const [hours, setHours] = createSignal(0)

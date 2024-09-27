@@ -1,9 +1,13 @@
-import { createSignal, onCleanup, onMount } from 'solid-js';
+import { createEffect, createSignal, onCleanup, onMount } from 'solid-js';
 
 function Speedometer(props) {
   const [currentValue, setCurrentValue] = createSignal(props.value || props.min);
   const isUserInput = props.isUserInput || false;
   let logo; // Declare logo variable here
+
+  createEffect(()=>{
+    drawSpeedometer(currentValue(), isUserInput ? "Adjust Value" : props.text); 
+  }, [props.darkMode]);
 
   const drawSpeedometer = (value, text) => {
     const canvas = document.getElementById(props.text) as HTMLCanvasElement;
@@ -24,9 +28,9 @@ function Speedometer(props) {
     const valueRad = ((value - props.min) / valueRange) * (maxRad - minRad) + minRad;
 
     // Get colors from CSS
-    const bgColor = getComputedStyle(canvas).getPropertyValue('--bg-color') || "grey";
-    const fgColor = getComputedStyle(canvas).getPropertyValue('--fg-color') || "purple";
-    const textColor = getComputedStyle(canvas).getPropertyValue('--text-color') || "#155D9B";
+    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--progress-bg').trim() || "grey";
+    const fgColor = getComputedStyle(document.documentElement).getPropertyValue('--progress-fg').trimEnd() || "red";
+    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trimEnd() || "#155D9B";
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 

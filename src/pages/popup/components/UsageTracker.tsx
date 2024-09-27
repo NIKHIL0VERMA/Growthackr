@@ -1,7 +1,7 @@
 import { createSignal, For } from 'solid-js'
 import Speedometer from './Speedometer'
 
-export function UsageTracker({ setCurrentView }) {
+export function UsageTracker({ darkMode, setCurrentView }) {
   const [platforms] = createSignal([
     { name: 'Facebook', usage: 45, limit: 60 },
     { name: 'Youtube', usage: 30, limit: 90 },
@@ -17,8 +17,10 @@ export function UsageTracker({ setCurrentView }) {
             <div class="platform-item">
               <Speedometer
                 id={index}
+                darkMode={darkMode}
                 value={platform.usage}
                 max={platform.limit}
+                min={0}
                 text={platform.name}
                 width={250}
               >{platform.name}</Speedometer>

@@ -22,9 +22,9 @@ const App = () => {
       </header>
       <main>
         {currentView() === 'main' ? (
-          <UsageTracker setCurrentView={setCurrentView} />
+          <UsageTracker darkMode={darkMode} setCurrentView={setCurrentView} />
         ) : (
-          <TimeSettings setCurrentView={setCurrentView} />
+          <TimeSettings darkMode={darkMode} setCurrentView={setCurrentView} />
         )}
       </main>
     </div>

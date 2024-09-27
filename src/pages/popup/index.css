@@ -1,128 +1,110 @@
 :root {
-    --primary-color: #9C6CAE;
-    --bg-light: #f0f0f0;
-    --bg-dark: #2a2a2a;
-    --text-light: #333;
-    --text-dark: #f0f0f0;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  body.light {
-    background-color: var(--bg-light);
-    color: var(--text-light);
-  }
-  
-  body.dark {
-    background-color: var(--bg-dark);
-    color: var(--text-dark);
-  }
-  
-  .app {
-    width: 300px;
-    padding: 20px;
-  }
-  
-  header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    color: var(--primary-color);
-    margin-bottom: 5px;
-  }
-  
-  button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #8a5c9e;
-  }
-  
-  .platform-list {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
-  .platform-item {
-    text-align: center;
-  }
-  
-  .radial-progress {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .progress-bg {
-    fill: none;
-    stroke: #e0e0e0;
-    stroke-width: 10;
-  }
-  
-  .progress-bar {
-    fill: none;
-    stroke: var(--primary-color);
-    stroke-width: 10;
-    stroke-linecap: round;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dasharray 0.3s;
-  }
-  
-  .progress-label {
-    font-size: 24px;
-    font-weight: bold;
-    fill: var(--primary-color);
-  }
-  
-  .theme-toggle {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .time-settings .platform-selection {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .time-settings .platform-selection button {
-    flex: 1 0 30%;
-  }
-  
-  .time-settings .platform-selection button.selected {
-    background-color: #8a5c9e;
-  }
-  
-  .time-settings .time-input {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .time-settings .time-input input {
-    width: 50px;
-    padding: 5px;
-    text-align: center;
-  }
+  /* Light Theme Colors */
+  --bg-color: #f0f0f0; /* Light background */
+  --fg-color: #9C6CAE; /* Light foreground */
+  --text-color: #333; /* Light text */
+  --progress-bg: rgb(214, 211, 211);
+  --progress-fg: #c093d1;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.dark {
+  /* Dark Theme Colors */
+  --bg-color: #2a2a2a; /* Dark background */
+  --fg-color: #9C6CAE; /* Dark foreground */
+  --text-color: #f0f0f0; /* Dark text */
+  --progress-bg: rgb(51, 50, 50);
+  --progress-fg: #5c3c68;
+}
+
+body.dark { 
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.app {
+  width: 300px;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: var(--fg-color);
+  margin-bottom: 5px;
+}
+
+button {
+  background-color: var(--fg-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #8a5c9e;
+}
+
+.platform-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 300px; /* Adjust the max-height as needed */
+  margin-bottom: 20px;
+}
+
+.platform-item {
+  text-align: center;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.time-settings .platform-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.time-settings .platform-selection button {
+  flex: 1 0 30%;
+}
+
+.time-settings .platform-selection button.selected {
+  background-color: #8a5c9e;
+}
+
+.time-settings .time-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.time-settings .time-input input {
+  width: 50px;
+  padding: 5px;
+  text-align: center;
+}
