@@ -1,13 +1,13 @@
-let timeSpent = {};
-let dailyLimits = {};
-let isTracking = false;
+let timeSpent: Record<string, Record<string, number>> = {};
+let dailyLimits: Record<string, number> = {};
+let isTracking: boolean = false;
 
 chrome.storage.sync.get(['timeSpent', 'dailyLimits']).then((result) => {
   timeSpent = result.timeSpent || {};
   dailyLimits = result.dailyLimits || {};
 });
 
-function updateTimeSpent(domain) {
+function updateTimeSpent(domain: string): void {
   const today = new Date().toDateString();
   if (!timeSpent[today]) {
     timeSpent[today] = {};
@@ -16,7 +16,7 @@ function updateTimeSpent(domain) {
   chrome.storage.sync.set({ timeSpent: timeSpent });
 }
 
-function checkTimeLimit(domain) {
+function checkTimeLimit(domain: string): void {
   const today = new Date().toDateString();
   const timeSpentToday = timeSpent[today]?.[domain] || 0;
   const limit = dailyLimits[domain] || Infinity;

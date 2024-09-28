@@ -83,11 +83,9 @@ const BlockSite = () => {
   return null; // This component does not render anything itself
 };
 
-export default BlockSite;
-
 const root = document.createElement("div");
 root.id = "extension-root";
 document.body.append(root);
 
 // Wrap the JSX in a function to resolve the type error
-render(() => <div>content</div>, root);
+render( BlockSite, root);

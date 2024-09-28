@@ -1,12 +1,24 @@
-import { createSignal, For } from 'solid-js'
+import { createSignal, For, onMount } from 'solid-js'
 import Speedometer from './Speedometer'
 
 export function UsageTracker({ darkMode, setCurrentView }) {
-  const [platforms] = createSignal([
-    { name: 'Facebook', usage: 45, limit: 60 },
-    { name: 'Youtube', usage: 30, limit: 90 },
-    { name: 'Instagram', usage: 15, limit: 30 },
-  ])
+  const [platforms, setPlatforms] = createSignal([]);
+
+  onMount(() => {
+    chrome.storage.sync.get(['timeSpent', 'dailyLimits'], (result) => {
+      const timeSpent = result.timeSpent || {};
+      const dailyLimits = result.dailyLimits || {};
+      const today = new Date().toDateString();
+
+      const updatedPlatforms = [
+        { name: 'Facebook', usage: timeSpent[today]?.['facebook.com'] || 0, limit: dailyLimits['facebook.com'] || 60 },
+        { name: 'Youtube', usage: timeSpent[today]?.['youtube.com'] || 0, limit: dailyLimits['youtube.com'] || 90 },
+        { name: 'Instagram', usage: timeSpent[today]?.['instagram.com'] || 0, limit: dailyLimits['instagram.com'] || 30 },
+      ];
+
+      setPlatforms(updatedPlatforms);
+    });
+  });
 
   return (
     <div class="usage-tracker">
