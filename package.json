@@ -11,8 +11,8 @@
     "scripts": {
         "lint": "eslint . --fix -c .eslintrc --ext js,ts --ignore-pattern='!.*'",
         "devdist": "nodemon",
-        "dev": "vite build -w",
-        "build": "tsc --noEmit && vite build",
+        "dev": "vite build -w --mode development",
+        "build": "NODE_ENV=production tsc --noEmit && vite build",
         "test": "jest"
     },
     "repository": {

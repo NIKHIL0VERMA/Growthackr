@@ -19,13 +19,11 @@ const manifest = defineManifest(async () => ({
   permissions : [
     "storage",
     "tabs",
+    "activeTab",
+    "unlimitedStorage",
     "webNavigation"
   ],
-  host_permissions : [
-    "https://*.facebook.com/*",
-    "https://*.youtube.com/*",
-    "https://*.instagram.com/*",
-  ],
+  host_permissions : ["<all_urls>"],
   icons: {
     "16": "icons/16x16.png",
     "34": "icons/34x34.png",
@@ -36,7 +34,7 @@ const manifest = defineManifest(async () => ({
   },
   content_scripts: [
     {
-      matches: ["http://*/*", "https://*/*", "<all_urls>"],
+      matches: ["<all_urls>"],
       js: ["src/pages/content/index.tsx"],
     },
   ],

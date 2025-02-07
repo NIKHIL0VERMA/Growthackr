@@ -10,7 +10,7 @@ const assetsDir = resolve(root, "assets");
 const outDir = resolve(__dirname, "dist");
 const publicDir = resolve(__dirname, "public");
 
-const isDev = process.env.__DEV__ === "true";
+const isDev = process.env.NODE_ENV === "development";
 
 export default defineConfig({
   plugins: [solidPlugin(), crx({ manifest })],
@@ -25,6 +25,7 @@ export default defineConfig({
   build: {
     outDir,
     sourcemap: isDev,
+    minify: isDev ? false: true,
     rollupOptions: {
       // input: {
       //   devtools: resolve(pagesDir, "devtools", "index.html"),
