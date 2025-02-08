@@ -23,8 +23,9 @@ chrome.runtime.onInstalled.addListener(async details=>{
   if(details.reason == 'update' && !details.previousVersion){
     logger.log("Extension is updated: ", details);
   } 
-  chrome.storage.local.set({welcome:true});
   logger.log("add welcome init to install only");
+  chrome.tabs.create({url: chrome.runtime.getURL("welcome.html")});
+  chrome.storage.local.set({welcome:true});
   chrome.storage.local.set({timeSpent: {}, dailyLimits: {}});
 })
 
