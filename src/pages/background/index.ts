@@ -6,6 +6,7 @@ import { extractHostName, isValidPage } from "./utilities";
 // limit = urls, time
 let timeSpentStorage: Record<string, Record<string, number>> = {};
 let dailyLimitsStorage: Record<string, number> = {};
+let monitorList: Array<string>;
 
 // Logger for future if I work on this ;)
 logger.log("Starting of background script");
@@ -21,9 +22,10 @@ chrome.runtime.onInstalled.addListener(async details=>{
 
   if(details.reason == 'update' && !details.previousVersion){
     logger.log("Extension is updated: ", details);
-  }  
-
-  chrome.storage.local.set({timeSpent: {}, dailyLimits: {}})
+  } 
+  chrome.storage.local.set({welcome:true});
+  logger.log("add welcome init to install only");
+  chrome.storage.local.set({timeSpent: {}, dailyLimits: {}});
 })
 
 // Bunch of random events maybe used in future
@@ -82,46 +84,161 @@ function setDailyLimits(key: string, value: number): void {
 
 // Load the data
 function LoadData(): void {
-  chrome.storage.local.get('timeSpent', (result) => {
+  chrome.storage.local.get(['timeSpent', 'monitorList', 'dailyLimits'], (result) => {
     timeSpentStorage = result.timeSpent || {};
+    dailyLimitsStorage = result.dailyLimits || {};
+    monitorList = result.monitorList || Array<string>;
   });
-  chrome.storage.local.get('dailyLimits', (result) => {
-      dailyLimitsStorage = result.dailyLimits || {};
-  });
-}
+};
 
 async function isInBlockList(url: string) : Promise<boolean> {
   logger.log(`checking if ${url} is in block list`);
-  return true;
-  return Object.keys(dailyLimitsStorage).some(key => key.includes(url));
+  return monitorList.includes(url);
 }
 
+// Currently this code increase time even if tab is not active 
+// async function loadCurrentTab() {
+//   const window = await chrome.windows.getLastFocused({populate: true});
+//   if(!window.focused){
+//     logger.log("window lost the focus");
+//     return;
+//   }
+
+//   const activeTab = window.tabs?.find(t => t.active === true);
+//   if(!isValidPage(activeTab)){
+//     logger.log("Not a valid page");
+//     currentDomain = null;
+//     return;
+//   }
+
+//   const activeDomain = extractHostName(activeTab!.url);
+//   if(!(await isInBlockList(activeDomain))){
+//     logger.log(`${activeDomain} is not in monitored list`);
+//     currentDomain = null;
+//     return;
+//   }
+//   currentDomain = activeDomain;
+//   if(!monitorTabs[activeTab.id]){
+//     monitorTabs[activeTab.id] = currentDomain;
+//   }
+// }
+
+// async function trackTime() {
+//   await loadCurrentTab();
+//   for(const [tabId, domain] of Object.entries(monitorTabs) as [string, string][]){
+//     if(!(await isInBlockList(domain))){
+//       logger.log(`Tab with id ${tabId} and domain ${domain} shouldn't be in the monitored list`);
+//       currentDomain = null;
+//       return;
+//     }
+
+//     // Will be using it for case when user want to stop tracking current session/domain only
+//     currentDomain = domain;
+//     const date = new Date().toISOString().split('T')[0];
+
+//     // Ensure the date entry exists
+//     if(!timeSpentStorage[date]){
+//       timeSpentStorage[date] = {};
+//       logger.log(`created data for ${date}`);
+//     }
+//     //Ensure the url entry exists
+//     if(!timeSpentStorage[date][domain]){
+//       timeSpentStorage[date][domain] = 0;
+//       logger.log(`init the ${domain} value to 0`);
+//     }
+
+//     timeSpentStorage[date][domain] += 1;
+//     logger.log(`value changes on ${date} for ${domain} to ${timeSpentStorage[date][domain]}`);
+//   }
+
+//   if(Object.keys(monitorTabs).length === 0){
+//     currentDomain = null;
+//   }
+// }
+
+// last working tracker of time
 async function trackTime() {
  const window = await chrome.windows.getLastFocused({populate: true});
- if(window.focused){
-  const activeTab = window.tabs?.find(t => t.active === true);
-  if(isValidPage(activeTab)){
-    const activeDomain = extractHostName(activeTab!.url);
-    if(await isInBlockList(activeDomain)){
-      currentDomain = activeDomain;
-      const date = new Date().toISOString().split('T')[0];
-      // Ensure the date entry exists
-      if (!timeSpentStorage[date]) { 
-        timeSpentStorage[date] = {};
-        logger.log('create today date');
-      }
-      // Ensure the URL entry exists
-      if (!timeSpentStorage[date][activeDomain]) { 
-        timeSpentStorage[date][activeDomain] = 0;
-        logger.log(`init the ${activeDomain} value to 0`);
-      } 
-      timeSpentStorage[date][activeDomain] += 1
-      logger.log(`value changes on ${date} for ${activeDomain} to ${timeSpentStorage[date][activeDomain]}`);
-    }else{
-      currentDomain = null;
-    }
-  }else{
-    currentDomain = null;
-  }
+ 
+ if(!window.focused){
+  logger.log("window lost the focus");
+  return;
  }
-}
+
+ const activeTab = window.tabs?.find(t => t.active === true);
+ if(!isValidPage(activeTab)){
+  logger.log("Not a valid page");
+  currentDomain = null;
+  return;
+ }
+ 
+ const activeDomain = extractHostName(activeTab!.url);
+ if(!(await isInBlockList(activeDomain))){
+  logger.log(`${activeDomain} is not in monitored list`);
+  currentDomain = null;
+  return;
+ }
+  currentDomain = activeDomain;
+  const date = new Date().toISOString().split('T')[0]; 
+  // Ensure the date entry exists
+  if (!timeSpentStorage[date]) { 
+    timeSpentStorage[date] = {};
+    logger.log('create today date');
+  }
+  // Ensure the URL entry exists
+  if (!timeSpentStorage[date][activeDomain]) { 
+    timeSpentStorage[date][activeDomain] = 0;
+    logger.log(`init the ${activeDomain} value to 0`);
+  } 
+  timeSpentStorage[date][activeDomain] += 1
+  logger.log(`value changes on ${date} for ${activeDomain} to ${timeSpentStorage[date][activeDomain]}`);
+};
+
+// // Temp in-memory mapping of monitored site which are audible and activated by the user
+// let monitorTabs = {};
+
+// // monitor the tab activities
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//   if(changeInfo.audible){
+//     const domain = extractHostName(tab.url);
+//     if(isInBlockList(domain)){
+//       monitorTabs[tabId] = domain;
+//     }
+//   } else if(changeInfo.audible = false && monitorTabs[tabId]){
+//       delete monitorTabs[tabId];
+//     }
+// });
+
+// // remove monitoring if tab is deleted
+// chrome.tabs.onRemoved.addListener((tabId) => {
+//   if(monitorTabs[tabId]){
+//     delete monitorTabs[tabId];
+//   }
+// })
+
+// // monitor current activate tab
+// chrome.tabs.onActivated.addListener(async (activeInfo) => {
+//   const activeTab = await chrome.tabs.get(activeInfo.tabId);
+//   if(activeTab.audible && isInBlockList(extractHostName(activeTab.url))){
+//     monitorTabs[activeInfo.tabId] = extractHostName(activeTab.url);
+//   } else if (monitorTabs[activeInfo.tabId]) {
+//     delete monitorTabs[activeInfo.tabId];
+//   }
+// });
+
+// Handling the frontend requests
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if(message.action === 'welcomeCompleted'){
+    chrome.storage.local.set({welcome: false}, () => {
+      sendResponse({success: true});
+    });
+    return true;
+  }
+
+  if(message.action === 'monitorList'){
+    chrome.storage.local.set({monitorList : message.value.map(platform => platform.url)}, () => {
+      sendResponse({success : true});
+    });
+    return true;
+  }
+});

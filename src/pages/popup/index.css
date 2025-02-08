@@ -1,10 +1,15 @@
 :root {
-  /* Light Theme Colors */
-  --bg-color: #f0f0f0; /* Light background */
-  --fg-color: #9C6CAE; /* Light foreground */
-  --text-color: #333; /* Light text */
+  --bg-color: #f0f0f0;
+  --fg-color: #9C6CAE;
+  --text-color: #333;
   --progress-bg: rgb(214, 211, 211);
   --progress-fg: #c093d1;
+  --btn-primary-bg: var(--fg-color);
+  --btn-primary-fg: var(--text-color);
+  --btn-secondary-bg: var(--bg-color);
+  --btn-secondary-fg: var(--text-color);
+  --btn-outline-bg: var(--bg-color);
+  --btn-outline-fg: var(--text-color);
 }
 
 body {
@@ -17,12 +22,17 @@ body {
 }
 
 body.dark {
-  /* Dark Theme Colors */
-  --bg-color: #2a2a2a; /* Dark background */
-  --fg-color: #9C6CAE; /* Dark foreground */
-  --text-color: #f0f0f0; /* Dark text */
+  --bg-color: #2a2a2a;
+  --fg-color: #9C6CAE;
+  --text-color: #f0f0f0;
   --progress-bg: rgb(51, 50, 50);
   --progress-fg: #5c3c68;
+  --btn-primary-bg: var(--fg-color);
+  --btn-primary-fg: var(--text-color);
+  --btn-secondary-bg: var(--bg-color);
+  --btn-secondary-fg: var(--text-color);
+  --btn-outline-bg: var(--bg-color);
+  --btn-outline-fg: var(--text-color);
 }
 
 body.dark { 
@@ -45,25 +55,11 @@ h1 {
   margin-bottom: 5px;
 }
 
-button {
-  background-color: var(--fg-color);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #8a5c9e;
-}
-
 .platform-list {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  max-height: 300px; /* Adjust the max-height as needed */
+  max-height: 300px;
   margin-bottom: 20px;
 }
 
@@ -88,14 +84,6 @@ button:hover {
   margin-bottom: 20px;
 }
 
-.time-settings .platform-selection button {
-  flex: 1 0 30%;
-}
-
-.time-settings .platform-selection button.selected {
-  background-color: #8a5c9e;
-}
-
 .time-settings .time-input {
   display: flex;
   justify-content: space-between;
@@ -107,4 +95,61 @@ button:hover {
   width: 50px;
   padding: 5px;
   text-align: center;
+}
+
+/* Custom button styles */
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-bg);
+}
+
+.btn-primary:focus, .btn-secondary:focus, .btn-outline:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-fg);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-bg);
+}
+
+.btn-outline {
+  border: 1px solid var(--btn-outline-fg);
+  color: var(--btn-outline-fg);
+  background-color: var(--btn-outline-bg);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-outline:hover {
+  background-color: var(--btn-outline-bg);
 }

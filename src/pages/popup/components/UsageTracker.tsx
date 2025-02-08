@@ -1,11 +1,12 @@
 import { createSignal, For, onMount } from 'solid-js'
+import { Button } from '@src/pages/components/Button';
 import Speedometer from './Speedometer'
 
 export function UsageTracker({ darkMode, setCurrentView }) {
   const [platforms, setPlatforms] = createSignal([]);
 
   onMount(() => {
-    chrome.storage.sync.get(['timeSpent', 'dailyLimits'], (result) => {
+    chrome.storage.local.get(['timeSpent', 'dailyLimits'], (result) => {
       const timeSpent = result.timeSpent || {};
       const dailyLimits = result.dailyLimits || {};
       const today = new Date().toDateString();
@@ -40,7 +41,7 @@ export function UsageTracker({ darkMode, setCurrentView }) {
           )}
         </For>
       </div>
-      <button onClick={() => setCurrentView('settings')}>Set Time</button>
+      <Button onClick={() => setCurrentView('settings')}>Set Time</Button>
     </div>
   )
 }

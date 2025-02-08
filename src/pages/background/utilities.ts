@@ -29,6 +29,10 @@ export function isValidPage(tab: chrome.tabs.Tab | undefined): boolean {
     hostname = hostname.split(':')[0];
     hostname = hostname.split('?')[0];
   
+    if (hostname.startsWith('www.')) {
+      hostname = hostname.substring(4);
+    }
+      
     return hostname;
   }
   
