@@ -1,4 +1,4 @@
-import { logger } from "./logger";
+import { colorLog, LogTypes } from "../../../utils/logger";
 import { extractHostName, isValidPage } from "./utilities";
 
 // storage variables
@@ -9,33 +9,42 @@ let dailyLimitsStorage: Record<string, number> = {};
 let monitorList: Array<string>;
 
 // Logger for future if I work on this ;)
-logger.log("Starting of background script");
+colorLog("Starting of background script", LogTypes.INFO);
 self.onerror = err => {
-  logger.log("Unhandled error: ", err);
+  colorLog("Unhandled error: " + err, LogTypes.ERROR);
 }
 
 // Logging events and init storage
 chrome.runtime.onInstalled.addListener(async details=>{
   if(details.reason == 'install'){
-    logger.log("Extension is installed: ", details);
+    colorLog("Extension is installed: " + details, LogTypes.INFO);
   }
 
   if(details.reason == 'update' && !details.previousVersion){
-    logger.log("Extension is updated: ", details);
+    colorLog("Extension is updated: "+  details, LogTypes.SUCCESS);
   } 
-  logger.log("add welcome init to install only");
-  chrome.tabs.create({url: chrome.runtime.getURL("welcome.html")});
+  colorLog("add welcome init to install only", LogTypes.WARNING);
+  chrome.runtime.openOptionsPage();
   chrome.storage.local.set({welcome:true});
   chrome.storage.local.set({timeSpent: {}, dailyLimits: {}});
 })
 
 // Bunch of random events maybe used in future
 chrome.runtime.onStartup.addListener(() => {
-  logger.log("onStartup event");
+  colorLog("onStartup event",LogTypes.SUCCESS);
 });
 chrome.windows.onFocusChanged.addListener(() => {
-  logger.log("onFocusChanged");
+  colorLog("onFocusChanged",LogTypes.WARNING);
 });
+
+// Function to close the options page
+function closeOptionsPage() {
+  chrome.tabs.query({ url: chrome.runtime.getURL("src/pages/options/index.html") }, (tabs) => {
+    if (tabs.length > 0) {
+      chrome.tabs.remove(tabs[0].id);
+    }
+  });
+}
 
 // Clearing the storage if requested from extension
 chrome.runtime.onMessage.addListener(async msg => {
@@ -93,7 +102,7 @@ function LoadData(): void {
 };
 
 async function isInBlockList(url: string) : Promise<boolean> {
-  logger.log(`checking if ${url} is in block list`);
+  colorLog(`checking if ${url} is in block list`, LogTypes.INFO);
   return monitorList.includes(url);
 }
 
@@ -101,20 +110,20 @@ async function isInBlockList(url: string) : Promise<boolean> {
 // async function loadCurrentTab() {
 //   const window = await chrome.windows.getLastFocused({populate: true});
 //   if(!window.focused){
-//     logger.log("window lost the focus");
+//     colorLog("window lost the focus", LogTypes.WARNING);
 //     return;
 //   }
 
 //   const activeTab = window.tabs?.find(t => t.active === true);
 //   if(!isValidPage(activeTab)){
-//     logger.log("Not a valid page");
+//     colorLog("Not a valid page", LogTypes.WARNING);
 //     currentDomain = null;
 //     return;
 //   }
 
 //   const activeDomain = extractHostName(activeTab!.url);
 //   if(!(await isInBlockList(activeDomain))){
-//     logger.log(`${activeDomain} is not in monitored list`);
+//     colorLog(`${activeDomain} is not in monitored list`, LogTypes.INFO);
 //     currentDomain = null;
 //     return;
 //   }
@@ -128,7 +137,7 @@ async function isInBlockList(url: string) : Promise<boolean> {
 //   await loadCurrentTab();
 //   for(const [tabId, domain] of Object.entries(monitorTabs) as [string, string][]){
 //     if(!(await isInBlockList(domain))){
-//       logger.log(`Tab with id ${tabId} and domain ${domain} shouldn't be in the monitored list`);
+//       colorLog(`Tab with id ${tabId} and domain ${domain} shouldn't be in the monitored list`, LogTypes.WARNING);
 //       currentDomain = null;
 //       return;
 //     }
@@ -140,16 +149,16 @@ async function isInBlockList(url: string) : Promise<boolean> {
 //     // Ensure the date entry exists
 //     if(!timeSpentStorage[date]){
 //       timeSpentStorage[date] = {};
-//       logger.log(`created data for ${date}`);
+//       colorLog(`created data for ${date}`, LogTypes.SUCCESS);
 //     }
 //     //Ensure the url entry exists
 //     if(!timeSpentStorage[date][domain]){
 //       timeSpentStorage[date][domain] = 0;
-//       logger.log(`init the ${domain} value to 0`);
+//       colorLog(`init the ${domain} value to 0`, LogTypes.SUCCESS);
 //     }
 
 //     timeSpentStorage[date][domain] += 1;
-//     logger.log(`value changes on ${date} for ${domain} to ${timeSpentStorage[date][domain]}`);
+//     colorLog(`value changes on ${date} for ${domain} to ${timeSpentStorage[date][domain]}`, LogTypes.INFO);
 //   }
 
 //   if(Object.keys(monitorTabs).length === 0){
@@ -162,20 +171,20 @@ async function trackTime() {
  const window = await chrome.windows.getLastFocused({populate: true});
  
  if(!window.focused){
-  logger.log("window lost the focus");
+  colorLog("window lost the focus", LogTypes.WARNING);
   return;
  }
 
  const activeTab = window.tabs?.find(t => t.active === true);
  if(!isValidPage(activeTab)){
-  logger.log("Not a valid page");
+  colorLog("Not a valid page", LogTypes.WARNING);
   currentDomain = null;
   return;
  }
  
  const activeDomain = extractHostName(activeTab!.url);
  if(!(await isInBlockList(activeDomain))){
-  logger.log(`${activeDomain} is not in monitored list`);
+  colorLog(`${activeDomain} is not in monitored list`, LogTypes.WARNING);
   currentDomain = null;
   return;
  }
@@ -184,16 +193,25 @@ async function trackTime() {
   // Ensure the date entry exists
   if (!timeSpentStorage[date]) { 
     timeSpentStorage[date] = {};
-    logger.log('create today date');
+    colorLog('create today date', LogTypes.SUCCESS);
   }
   // Ensure the URL entry exists
   if (!timeSpentStorage[date][activeDomain]) { 
     timeSpentStorage[date][activeDomain] = 0;
-    logger.log(`init the ${activeDomain} value to 0`);
-  } 
+    colorLog(`init the ${activeDomain} value to 0`, LogTypes.SUCCESS);
+  }
+  
+
+  // Main Blocking here
+  // TODO: testing with 10s change it to user selected
+  if(timeSpentStorage[date][activeDomain] >= 10){
+    colorLog(`Testing 10s blocking on ${activeDomain}`, LogTypes.INFO);
+    chrome.tabs.sendMessage(activeTab.id, {action : "blockSite"});
+  }else{
+
   timeSpentStorage[date][activeDomain] += 1
-  logger.log(`value changes on ${date} for ${activeDomain} to ${timeSpentStorage[date][activeDomain]}`);
-};
+  colorLog(`value changes on ${date} for ${activeDomain} to ${timeSpentStorage[date][activeDomain]}`, LogTypes.INFO);
+}};
 
 // // Temp in-memory mapping of monitored site which are audible and activated by the user
 // let monitorTabs = {};
@@ -234,6 +252,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({success: true});
     });
     return true;
+  }
+
+  if (message.action === "closeOptionsPage") {
+    closeOptionsPage();
+    sendResponse({ status: "Options page closed" });
   }
 
   if(message.action === 'monitorList'){

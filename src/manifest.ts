@@ -10,6 +10,7 @@ const manifest = defineManifest(async () => ({
   name: packageJson.displayName ?? packageJson.name,
   version: `${major}.${minor}.${patch}.${label}`,
   description: packageJson.description,
+  options_page: "src/pages/options/index.html",
   background: { service_worker: "src/pages/background/index.ts" },
   action: {
     default_popup: "src/pages/popup/index.html",
@@ -34,15 +35,15 @@ const manifest = defineManifest(async () => ({
   },
   content_scripts: [
     {
-      matches: ["<all_urls>"],
+      matches: ["http://*/*", "https://*/*","<all_urls>"],
       js: ["src/pages/content/index.tsx"],
     },
   ],
   
   web_accessible_resources: [
     {
-      resources: ["assets/js/*.js", "assets/css/*.css", "assets/img/*"],
-      matches: ["<all_urls>"],
+      resources: ["assets/*.js", "assets/*.css", "icons/*"],
+      matches: ["*://*/*"],
     },
   ],
 }));

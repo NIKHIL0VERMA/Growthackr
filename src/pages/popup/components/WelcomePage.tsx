@@ -1,6 +1,6 @@
 import { createSignal, For } from "solid-js"
-import { Input } from "@pages/components/Input"
-import { Button } from "@pages/components/Button"
+import { Input } from "@src/components/Input"
+import { Button } from "@src/components/Button"
 
 const popularPlatforms = [
   { name: "Facebook", url: "facebook.com" },

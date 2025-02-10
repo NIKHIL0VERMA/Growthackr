@@ -1,27 +1,30 @@
-import { createSignal, createEffect, onMount } from 'solid-js'
+import { createSignal, createEffect } from 'solid-js'
 import { render } from 'solid-js/web'
-import '../popup/index.css'
-import { ThemeToggle } from '../popup/components/ThemeToggle'
-import { WelcomePage } from '../popup/components/WelcomePage'
-import { logger } from '../background/logger'
+import '@pages/popup/index.css'
+import { ThemeToggle } from '@pages/popup/components/ThemeToggle'
+import { WelcomePage } from '@pages/popup/components/WelcomePage'
+import { colorLog, LogTypes } from '../../../utils/logger'
 
-const App = () => {
+const Index = () => {
   const [darkMode, setDarkMode] = createSignal(false)
   
   const handleWelcomeComplete = (platformList) => {
     chrome.runtime.sendMessage({action: 'welcomeCompleted', value: false}, (response) =>{
       if(response.success){
-        logger.log("Welcome Event completed");
+        colorLog("Welcome Event completed", LogTypes.SUCCESS);
       }
     });
 
     chrome.runtime.sendMessage({action: 'monitorList', value: platformList}, (response) => {
       if(response.success){
-        logger.log(`Successfully saved monitoring list`);
-        logger.log(platformList);
+        colorLog(`Successfully saved monitoring list`, LogTypes.SUCCESS);
+        colorLog(platformList, LogTypes.INFO);
       }
-    })
+    });
 
+    chrome.runtime.sendMessage({action: "closeOptionsPage"}, (response) =>{
+      colorLog("Option page after welcoming closed", LogTypes.SUCCESS);
+    })
   };
 
   createEffect(() => {
@@ -42,5 +45,5 @@ const App = () => {
   )
 }
 
-const root = document.getElementById('welcome-container');
-render(App, root as HTMLElement);
+const root = document.getElementById('options-container');
+render(Index, root as HTMLElement);

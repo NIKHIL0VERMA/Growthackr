@@ -5,7 +5,7 @@ import { TimeSettings } from './components/TimeSettings'
 import { ThemeToggle } from './components/ThemeToggle'
 import './index.css'
 import { WelcomePage } from './components/WelcomePage'
-import { logger } from '../background/logger'
+import { colorLog, LogTypes } from '../../../utils/logger'
 
 const App = () => {
   const [darkMode, setDarkMode] = createSignal(false)
@@ -16,14 +16,14 @@ const App = () => {
     setWelcome(false);
     chrome.runtime.sendMessage({action: 'welcomeCompleted', value: false}, (response) =>{
       if(response.success){
-        logger.log("Welcome Event completed");
+        colorLog("Welcome Event completed", LogTypes.SUCCESS);
       }
     });
 
     chrome.runtime.sendMessage({action: 'monitorList', value: platformList}, (response) => {
       if(response.success){
-        logger.log(`Successfully saved monitoring list`);
-        logger.log(platformList);
+        colorLog(`Successfully saved monitoring list`, LogTypes.INFO);
+        colorLog(platformList, LogTypes.INFO);
       }
     })
 

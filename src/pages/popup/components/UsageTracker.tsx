@@ -1,5 +1,5 @@
 import { createSignal, For, onMount } from 'solid-js'
-import { Button } from '@src/pages/components/Button';
+import { Button } from '@src/components/Button';
 import Speedometer from './Speedometer'
 
 export function UsageTracker({ darkMode, setCurrentView }) {
