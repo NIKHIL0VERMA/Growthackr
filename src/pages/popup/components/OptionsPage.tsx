@@ -1,7 +1,6 @@
 import { createEffect, createSignal, For } from "solid-js"
 import { Input } from "@src/components/Input"
 import { Button } from "@src/components/Button"
-import './WelcomePage.css' // Importing the CSS file for animations
 
 const popularPlatforms = [
   { name: "Facebook", url: "facebook.com" },
@@ -11,7 +10,7 @@ const popularPlatforms = [
   { name: "TikTok", url: "tiktok.com" },
 ]
 
-export function WelcomePage({ onComplete }) {
+export function OptionsPage({ onComplete }) {
   const [selectedPlatforms, setSelectedPlatforms] = createSignal([])
   const [customUrl, setCustomUrl] = createSignal("")
 
@@ -37,20 +36,20 @@ export function WelcomePage({ onComplete }) {
   }
 
   createEffect(() => {
-    document.title = "Welcome to Growthackr";
+    document.title = "Growthackr Options";
   });
 
   return (
-    <div class="welcome-page p-6 max-w-md mx-auto bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-white">Welcome to Growthackr</h2>
-      <p class="mb-4 text-white">Select the platforms you want to track:</p>
+    <div class="welcome-page p-6 max-w-md mx-auto">
+      <h2 class="text-2xl font-bold mb-4">In the option menu</h2>
+      <p class="mb-4">Select the platforms you want to track:</p>
       <div class="grid grid-cols-2 gap-4 mb-6">
         <For each={popularPlatforms}>
           {(platform) => (
             <Button
               variant={selectedPlatforms().includes(platform) ? "primary" : "outline"}
               onClick={() => togglePlatform(platform)}
-              class="w-full transform transition-transform duration-300 hover:scale-105"
+              class="w-full"
             >
               {platform.name}
             </Button>
@@ -58,27 +57,27 @@ export function WelcomePage({ onComplete }) {
         </For>
       </div>
       <div class="mb-6">
-        <p class="mb-2 text-white">Add a custom website:</p>
+        <p class="mb-2">Add a custom website:</p>
         <div class="flex gap-2">
           <Input
             type="text"
             placeholder="Enter URL (e.g., example.com)"
             value={customUrl()}
             onInput={(e) => setCustomUrl(e.target.value)}
-            class="w-full"
           />
-          <Button class="transform transition-transform duration-300 hover:scale-105" onClick={addCustomUrl}>Add</Button>
+          <Button onClick={addCustomUrl}>Add</Button>
         </div>
       </div>
       <div class="mb-6">
-        <p class="font-bold mb-2 text-white">Selected platforms:</p>
-        <ul class="list-disc pl-5 text-white">
+        <p class="font-bold mb-2">Selected platforms:</p>
+        <ul class="list-disc pl-5">
           <For each={selectedPlatforms()}>{(platform) => <li>{platform.name}</li>}</For>
         </ul>
       </div>
-      <Button class="w-full transform transition-transform duration-300 hover:scale-105" onClick={handleComplete}>
+      <Button onClick={handleComplete} class="w-full">
         Get Started
       </Button>
     </div>
   )
 }
+

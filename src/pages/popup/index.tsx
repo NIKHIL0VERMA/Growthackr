@@ -8,9 +8,9 @@ import { WelcomePage } from './components/WelcomePage'
 import { colorLog, LogTypes } from '../../../utils/logger'
 
 const App = () => {
-  const [darkMode, setDarkMode] = createSignal(false)
-  const [currentView, setCurrentView] = createSignal('main')
-  const [welcome, setWelcome] = createSignal(false)
+  const [darkMode, setDarkMode] = createSignal(false);
+  const [currentView, setCurrentView] = createSignal('main');
+  const [welcome, setWelcome] = createSignal(false);
 
   const handleWelcomeComplete = (platformList) => {
     setWelcome(false);

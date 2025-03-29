@@ -1,13 +1,15 @@
-import { createSignal, createEffect } from 'solid-js'
+import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import '@pages/popup/index.css'
 import { ThemeToggle } from '@pages/popup/components/ThemeToggle'
 import { WelcomePage } from '@pages/popup/components/WelcomePage'
 import { colorLog, LogTypes } from '../../../utils/logger'
+import {OptionsPage} from '@pages/popup/components/OptionsPage'
 
 const Index = () => {
-  const [darkMode, setDarkMode] = createSignal(false)
-  
+  const [darkMode, setDarkMode] = createSignal(false);
+  const [welcomeShown, setwelcomeShown] = createSignal(false);
+
   const handleWelcomeComplete = (platformList) => {
     chrome.runtime.sendMessage({action: 'welcomeCompleted', value: false}, (response) =>{
       if(response.success){
@@ -27,8 +29,16 @@ const Index = () => {
     })
   };
 
+  onMount(() => {
+    chrome.storage.local.get(['welcome'], (res) => { // Convert this to central background
+      if(res.welcome !== false){
+        setwelcomeShown(true);
+      }
+    });
+  });
+
   createEffect(() => {
-    document.body.classList.toggle('dark', darkMode())
+    document.body.classList.toggle('dark', darkMode());
   });
 
   return (
@@ -39,7 +49,9 @@ const Index = () => {
         <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       </header>
       <main>
-            <WelcomePage onComplete={handleWelcomeComplete} />
+          {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
+            : (<OptionsPage onComplete={handleWelcomeComplete} />)
+            }
       </main>
     </div>
   )
