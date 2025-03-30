@@ -1,6 +1,5 @@
-import { colorLog, LogTypes } from "../../../utils/logger";
+import { colorLog, LogTypes } from "@utils/logger";
 import { createSignal } from "solid-js";
-
 
 const [isBlocked, setIsBlocked] = createSignal(false);
   let originalContent;

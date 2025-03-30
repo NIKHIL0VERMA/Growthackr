@@ -1,7 +1,7 @@
 import { createEffect, createSignal, For } from "solid-js"
 import { Input } from "@src/components/Input"
 import { Button } from "@src/components/Button"
-import './WelcomePage.css' // Importing the CSS file for animations
+import '@pages/options/styles/WelcomePage.css' 
 
 const popularPlatforms = [
   { name: "Facebook", url: "facebook.com" },
@@ -41,42 +41,44 @@ export function WelcomePage({ onComplete }) {
   });
 
   return (
-    <div class="welcome-page p-6 max-w-md mx-auto bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-4 text-white">Welcome to Growthackr</h2>
-      <p class="mb-4 text-white">Select the platforms you want to track:</p>
-      <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="welcome-page">
+      <h2 class="title">Welcome to Growthackr</h2>
+      <p class="description">Select the platforms you want to track:</p>
+      <div class="platforms">
         <For each={popularPlatforms}>
           {(platform) => (
             <Button
               variant={selectedPlatforms().includes(platform) ? "primary" : "outline"}
               onClick={() => togglePlatform(platform)}
-              class="w-full transform transition-transform duration-300 hover:scale-105"
+              class="platform-button"
+              aria-pressed={selectedPlatforms().includes(platform)}
             >
               {platform.name}
             </Button>
           )}
         </For>
       </div>
-      <div class="mb-6">
-        <p class="mb-2 text-white">Add a custom website:</p>
-        <div class="flex gap-2">
+      <div class="custom-url">
+        <p class="description">Add a custom website:</p>
+        <div class="input-group">
           <Input
             type="text"
             placeholder="Enter URL (e.g., example.com)"
             value={customUrl()}
             onInput={(e) => setCustomUrl(e.target.value)}
-            class="w-full"
+            class="url-input"
+            aria-label="Custom URL"
           />
-          <Button class="transform transition-transform duration-300 hover:scale-105" onClick={addCustomUrl}>Add</Button>
+          <Button onClick={addCustomUrl} class="add-button">Add</Button>
         </div>
       </div>
-      <div class="mb-6">
-        <p class="font-bold mb-2 text-white">Selected platforms:</p>
-        <ul class="list-disc pl-5 text-white">
+      <div class="selected-platforms">
+        <p class="description">Selected platforms:</p>
+        <ul>
           <For each={selectedPlatforms()}>{(platform) => <li>{platform.name}</li>}</For>
         </ul>
       </div>
-      <Button class="w-full transform transition-transform duration-300 hover:scale-105" onClick={handleComplete}>
+      <Button onClick={handleComplete} class="get-started-button">
         Get Started
       </Button>
     </div>

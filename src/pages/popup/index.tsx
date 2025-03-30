@@ -1,10 +1,10 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import { UsageTracker } from './components/UsageTracker'
-import { TimeSettings } from './components/TimeSettings'
-import { ThemeToggle } from './components/ThemeToggle'
-import './index.css'
-import { WelcomePage } from './components/WelcomePage'
+import { ThemeToggle } from '../../components/ThemeToggle'
+import "@assets/styles/global.css"
+import "@pages/popup/index.css"
+import { WelcomePage } from '../options/components/WelcomePage'
 import { colorLog, LogTypes } from '../../../utils/logger'
 
 const App = () => {
@@ -49,14 +49,11 @@ const App = () => {
         <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       </header>
       <main>
-        {currentView() === 'main' ?
-          welcome() ? (
+        {welcome() ? (
             <WelcomePage onComplete={handleWelcomeComplete} />
           ) : (
             <UsageTracker darkMode={darkMode} setCurrentView={setCurrentView} />
-          ) : (
-          <TimeSettings darkMode={darkMode} setCurrentView={setCurrentView} />
-        )}
+          )}
       </main>
     </div>
   )

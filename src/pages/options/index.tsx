@@ -1,14 +1,16 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
-import '@pages/popup/index.css'
-import { ThemeToggle } from '@pages/popup/components/ThemeToggle'
-import { WelcomePage } from '@pages/popup/components/WelcomePage'
-import { colorLog, LogTypes } from '../../../utils/logger'
-import {OptionsPage} from '@pages/popup/components/OptionsPage'
+import "@assets/styles/global.css"
+import { ThemeToggle } from '@src/components/ThemeToggle'
+import { WelcomePage } from '@src/pages/options/components/WelcomePage'
+import { colorLog, LogTypes } from '@utils/logger'
+import {OptionsPage} from '@src/pages/options/components/OptionsPage'
 
 const Index = () => {
   const [darkMode, setDarkMode] = createSignal(false);
   const [welcomeShown, setwelcomeShown] = createSignal(false);
+
+  const [currentView, setCurrentView] = createSignal('main');
 
   const handleWelcomeComplete = (platformList) => {
     chrome.runtime.sendMessage({action: 'welcomeCompleted', value: false}, (response) =>{
@@ -50,7 +52,7 @@ const Index = () => {
       </header>
       <main>
           {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
-            : (<OptionsPage onComplete={handleWelcomeComplete} />)
+            : (<OptionsPage setCurrentView={setCurrentView()}/>)
             }
       </main>
     </div>

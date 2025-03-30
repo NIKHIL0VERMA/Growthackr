@@ -9,6 +9,7 @@ const pagesDir = resolve(root, "pages");
 const assetsDir = resolve(root, "assets");
 const outDir = resolve(__dirname, "dist");
 const publicDir = resolve(__dirname, "public");
+const utilsDir = resolve(__dirname, "utils");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -19,6 +20,7 @@ export default defineConfig({
       "@src": root,
       "@assets": assetsDir,
       "@pages": pagesDir,
+      "@utils": utilsDir,
     },
   },
   publicDir,
