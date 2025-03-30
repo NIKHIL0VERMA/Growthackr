@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import "@assets/styles/global.css"
-import { ThemeSwitch, isDarkMode } from '@src/components/ThemeSwitch'
+import { isDarkMode } from '@src/components/ThemeSwitch'
 import { WelcomePage } from '@src/pages/options/components/WelcomePage'
 import { colorLog, LogTypes } from '@utils/logger'
 import {OptionsPage} from '@src/pages/options/components/OptionsPage'
@@ -40,7 +40,6 @@ const Index = () => {
 
   return (
     <div class={`app ${isDarkMode() ? 'dark' : 'light'}`}>
-      <ThemeSwitch/>
       <main>
           {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
             : (<OptionsPage setCurrentView={setCurrentView()}/>)

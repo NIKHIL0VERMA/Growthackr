@@ -1,56 +1,146 @@
 .welcome-page {
   padding: 20px;
-  max-width: 400px;
+  max-width: 100%;
   margin: auto;
   background: var(--bg-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: transform 0.3s ease;
+}
+
+#header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 16px;
   color: var(--text-color);
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .content {
+    flex-direction: row;
+  }
+}
+
+.left-section, .right-section {
+  flex: 1;
+  padding: 20px;
+  background: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .description {
   margin-bottom: 12px;
   color: var(--text-color);
+  text-align: center;
 }
 
-.platforms, .custom-url, .selected-platforms {
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 20px;
+  justify-content: center;
 }
 
-.platform-button, .add-button, .get-started-button {
-  display: inline-block;
-  margin: 4px 0;
+.platform-button {
+  display: flex;
+  align-items: center;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 4px;
   transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+  border: 1px solid var(--progress-bg);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  width: calc(50% - 10px);
 }
 
-.platform-button:hover, .add-button:hover, .get-started-button:hover {
+.platform-button.selected {
+  background-color: var(--fg-color);
+  color: var(--bg-color);
+}
+
+.platform-button:hover {
   transform: scale(1.05);
 }
 
-.url-input {
-  width: calc(100% - 100px);
-  padding: 8px;
+.platform-icon {
+  width: 24px;
+  height: 24px;
   margin-right: 8px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 8px;
   border: 1px solid var(--progress-bg);
   border-radius: 4px;
 }
 
-.get-started-button {
-  width: 100%;
+.add-button {
+  padding: 8px 16px;
   background-color: var(--fg-color);
-  color: var(--text-color);
+  color: var(--bg-color);
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.selected-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selected-list li {
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.get-started-button {
+  padding: 10px 20px;
+  background-color: var(--fg-color);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .get-started-button:hover {
