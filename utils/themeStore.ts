@@ -17,8 +17,4 @@ const toggleTheme = () => {
   localStorage.setItem('theme', newTheme ? 'dark' : 'light');
 };
 
-onMount(() => {
-  document.body.classList.toggle('dark', isDarkMode());
-});
-
 export { isDarkMode, toggleTheme };

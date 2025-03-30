@@ -27,7 +27,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  align-items: center;
 }
 
 @media (min-width: 768px) {
@@ -49,6 +48,7 @@
   margin-bottom: 12px;
   color: var(--text-color);
   text-align: center;
+  font-size: 16px;
 }
 
 .platforms {
@@ -103,17 +103,20 @@
 }
 
 .add-button {
-  padding: 8px 16px;
-  background-color: var(--fg-color);
-  color: var(--bg-color);
+  background: none;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  padding: 0;
 }
 
-.add-button:hover {
-  background-color: #0056b3;
+.plus-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s;
+}
+
+.add-button:hover .plus-icon {
+  transform: scale(1.1);
 }
 
 .error-message {
@@ -128,23 +131,34 @@
   margin: 0;
 }
 
-.selected-list li {
+.selected-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 8px;
   color: var(--text-color);
-}
-
-.get-started-button {
-  padding: 10px 20px;
-  background-color: var(--fg-color);
-  color: var(--bg-color);
-  border: none;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--progress-bg);
   border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.get-started-button:hover {
-  background-color: #0056b3;
+.platform-name {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
 @keyframes fadeIn {

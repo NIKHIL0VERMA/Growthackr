@@ -54,10 +54,6 @@
   transform: translateX(0.1em);
 }
 
-.cssbuttons-io-button:active .icon {
-  transform: scale(0.95);
-}
-
 .get-started-button {
     background: var(--fg-color); /* Use the foreground color variable */
     color: var(--text-color); /* Use the text color variable */
