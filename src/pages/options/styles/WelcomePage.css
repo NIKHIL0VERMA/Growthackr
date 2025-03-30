@@ -2,7 +2,7 @@
   padding: 20px;
   max-width: 400px;
   margin: auto;
-  background: #ffffff;
+  background: var(--bg-color);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
@@ -12,12 +12,12 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .description {
   margin-bottom: 12px;
-  color: #666;
+  color: var(--text-color);
 }
 
 .platforms, .custom-url, .selected-platforms {
@@ -41,14 +41,14 @@
   width: calc(100% - 100px);
   padding: 8px;
   margin-right: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--progress-bg);
   border-radius: 4px;
 }
 
 .get-started-button {
   width: 100%;
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--fg-color);
+  color: var(--text-color);
   border: none;
   cursor: pointer;
 }

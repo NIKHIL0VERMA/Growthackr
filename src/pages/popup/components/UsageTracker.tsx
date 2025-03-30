@@ -2,7 +2,7 @@ import { createSignal, For, onMount } from 'solid-js'
 import { Button } from '@src/components/Button';
 import Speedometer from './Speedometer'
 
-export function UsageTracker({ darkMode, setCurrentView }) {
+export function UsageTracker() {
   const [platforms, setPlatforms] = createSignal([]);
 
   onMount(() => {
@@ -30,7 +30,7 @@ export function UsageTracker({ darkMode, setCurrentView }) {
             <div class="platform-item">
               <Speedometer
                 id={index}
-                darkMode={darkMode}
+                darkMode={true}
                 value={platform.usage}
                 max={platform.limit}
                 min={0}
@@ -41,7 +41,7 @@ export function UsageTracker({ darkMode, setCurrentView }) {
           )}
         </For>
       </div>
-      <Button onClick={() => setCurrentView('settings')}>Set Time</Button>
+      <Button onClick={() => { chrome.runtime.openOptionsPage(); }}>Set Time</Button>
     </div>
   )
 }

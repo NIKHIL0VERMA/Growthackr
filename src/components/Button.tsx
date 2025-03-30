@@ -1,4 +1,5 @@
 import type { JSX } from "solid-js"
+import "@assets/styles/buttons.css"
 
 interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline"

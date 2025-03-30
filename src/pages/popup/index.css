@@ -1,6 +1,8 @@
 .app {
   width: 300px;
   padding: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 header {
@@ -43,4 +45,7 @@ h1 {
   width: 50px;
   padding: 5px;
   text-align: center;
+  border: 1px solid var(--progress-bg);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }

@@ -1,4 +1,5 @@
 import type { JSX } from "solid-js"
+import "@assets/styles/input.css"
 
 interface InputProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -6,15 +7,21 @@ interface InputProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
 
 export function Input(props: InputProps) {
   return (
-    <div class="mb-4">
+    <div class="input-container">
       {props.label && (
-        <label for={props.id} class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label 
+          for={props.id} 
+          class="input-label"
+          aria-label={props.label}
+        >
           {props.label}
         </label>
       )}
       <input
         {...props}
-        class={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${props.class || ""}`}
+        class={`input-field ${props.class || ""}`}
+        aria-required={props.required}
+        aria-invalid={props['aria-invalid'] || false}
       />
     </div>
   )
