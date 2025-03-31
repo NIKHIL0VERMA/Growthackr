@@ -1,0 +1,72 @@
+#growthackr-blocking-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999999;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards, slideIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+#growthackr-blocking-message h1 {
+    font-size: 2.8em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #FFD700;
+}
+
+#growthackr-blocking-message p {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    max-width: 80%;
+    color: #f1f1f1;
+}
+
+#blocking-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0);
+}
+
+.dismiss-button {
+    margin-top: 30px;
+    padding: 12px 25px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dismiss-button:hover {
+    background-color: #FF4500;
+}

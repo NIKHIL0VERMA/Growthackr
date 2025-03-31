@@ -1,4 +1,3 @@
-import { createSignal, createEffect } from 'solid-js'
 import { render } from 'solid-js/web'
 import { UsageTracker } from './components/UsageTracker'
 import { ThemeSwitch, isDarkMode } from '@src/components/ThemeSwitch'

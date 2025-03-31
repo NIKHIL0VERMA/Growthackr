@@ -20,7 +20,7 @@ const popularPlatforms = [
   { name: "Facebook", url: "facebook.com", img: facebookImg },
   { name: "YouTube", url: "youtube.com", img: youtubeImg },
   { name: "Instagram", url: "instagram.com", img: instagramImg },
-  { name: "X", url: "twitter.com", img: xImg },
+  { name: "X", url: "x.com", img: xImg },
   { name: "TikTok", url: "tiktok.com", img: tiktokImg },
   { name: "Snapchat", url: "snapchat.com", img: snapchatImg },
 ];

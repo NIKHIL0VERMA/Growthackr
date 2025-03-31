@@ -17,9 +17,13 @@ const manifest = defineManifest(async () => ({
     default_icon: "icons/34x34.png",
     default_title: packageJson.displayName ?? packageJson.name,
   },
+  content_security_policy: {
+    "extension_pages" : "script-src 'self'; object-src 'self';",
+  },
   permissions : [
     "storage",
     "tabs",
+    "scripting",
     "activeTab",
     "unlimitedStorage",
     "webNavigation"
@@ -33,16 +37,9 @@ const manifest = defineManifest(async () => ({
     "192": "icons/192x192.png",
     "512": "icons/512x512.png"
   },
-  content_scripts: [
-    {
-      matches: ["http://*/*", "https://*/*","<all_urls>"],
-      js: ["src/pages/content/index.tsx"],
-    },
-  ],
-  
   web_accessible_resources: [
     {
-      resources: ["assets/*.js", "assets/*.css", "icons/*"],
+      resources: ["assets/*.js", "assets/*.css", "icons/*", "styles/*"],
       matches: ["*://*/*"],
     },
   ],
