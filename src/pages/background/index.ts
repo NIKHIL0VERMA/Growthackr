@@ -19,16 +19,15 @@ self.onerror = err => {
 chrome.runtime.onInstalled.addListener(async details=>{
   if(details.reason == 'install'){
     colorLog("Extension is installed: " + details, LogTypes.INFO);
+    chrome.runtime.openOptionsPage();
+    chrome.storage.local.set({timeSpent: {}, dailyLimits: {}, monitorList: {}, welcome: true});  
   }
 
   if(details.reason == 'update' && !details.previousVersion){
     colorLog("Extension is updated: "+  details, LogTypes.SUCCESS);
   } 
   colorLog("add welcome init to install only", LogTypes.WARNING);
-  chrome.runtime.openOptionsPage();
-  chrome.storage.local.set({welcome:true});
-  chrome.storage.local.set({timeSpent: {}, dailyLimits: {}});
-})
+  });
 
 // Bunch of random events maybe used in future
 chrome.runtime.onStartup.addListener(() => {

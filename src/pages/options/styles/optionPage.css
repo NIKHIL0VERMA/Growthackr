@@ -1,0 +1,93 @@
+.options-page {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: 100vh; /* Full height to ensure visibility */
+}
+
+.left-section {
+    width: 55%; /* Adjust width as needed */
+    padding: 20px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.right-section {
+    width: 40%; /* Adjust width as needed */
+    padding: 20px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.input-card {
+    margin-bottom: 20px;
+}
+
+.time-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between inputs */
+}
+
+.time-input label {
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.time-input input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Full width for inputs */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker button on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.platforms {
+    display: flex;
+    flex-direction: column;
+}
+
+.platform-button {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.platform-button.selected {
+    background-color: #007bff; /* Highlight color */
+    color: white;
+}
+
+.platform-icon {
+    width: 30px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 10px;
+}
