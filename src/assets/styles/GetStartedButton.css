@@ -1,5 +1,6 @@
 .styled-wrapper {
   display: flex;
+  margin-bottom: 15px;
   justify-content: center; /* Center the button */
 }
 
@@ -25,7 +26,7 @@
   transition: all 0.3s;
 }
 
-.cssbuttons-io-button .icon {
+.cssbuttons-io-button .GSBicon {
   background: white;
   margin-left: 1em;
   position: absolute;
@@ -40,31 +41,16 @@
   transition: all 0.3s;
 }
 
-.cssbuttons-io-button:hover .icon {
+.cssbuttons-io-button:hover .GSBicon {
   width: calc(100% - 0.6em);
 }
 
-.cssbuttons-io-button .icon svg {
+.cssbuttons-io-button .GSBicon svg {
   width: 1.1em;
   transition: transform 0.3s;
   color: #7b52b9;
 }
 
-.cssbuttons-io-button:hover .icon svg {
+.cssbuttons-io-button:hover .GSBicon svg {
   transform: translateX(0.1em);
-}
-
-.get-started-button {
-    background: var(--fg-color); /* Use the foreground color variable */
-    color: var(--text-color); /* Use the text color variable */
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.get-started-button:hover {
-    background: var(--progress-fg); /* Optional: Use progress foreground color on hover */
-    color: var(--bg-color); /* Optional: Change text color on hover */
 }

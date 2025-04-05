@@ -1,20 +1,19 @@
-import { createSignal, For, onMount } from "solid-js";
-import { Input } from "@src/components/Input";
-import { Button } from "@src/components/Button";
-import { ThemeSwitch } from "@src/components/ThemeSwitch";
-import GetStartedButton from "@src/components/GetStartedButton";
-import '@pages/options/styles/WelcomePage.css';
+import { createSignal, For, onMount, Show } from "solid-js"
+import { Input } from "@src/components/Input"
+import { Button } from "@src/components/Button"
+import { ThemeSwitch } from "@src/components/ThemeSwitch"
+import GetStartedButton from "@src/components/GetStartedButton"
+import "@pages/options/styles/WelcomePage.css"
 
-// Import SVG images
-import facebookImg from "@assets/img/facebook.svg";
-import youtubeImg from "@assets/img/youtube.svg";
-import instagramImg from "@assets/img/instagram.svg";
-import xImg from "@assets/img/x.svg";
-import tiktokImg from "@assets/img/tiktok.svg";
-import snapchatImg from "@assets/img/snapchat.svg";
-import editIcon from "@assets/img/edit.svg";
-import deleteIcon from "@assets/img/delete.svg";
-import plusIcon from "@assets/img/plus.svg";
+import facebookImg from "@assets/img/facebook.svg"
+import youtubeImg from "@assets/img/youtube.svg"
+import instagramImg from "@assets/img/instagram.svg"
+import xImg from "@assets/img/x.svg"
+import tiktokImg from "@assets/img/tiktok.svg"
+import snapchatImg from "@assets/img/snapchat.svg"
+import editIcon from "@assets/img/edit.svg"
+import deleteIcon from "@assets/img/delete.svg"
+import plusIcon from "@assets/img/plus.svg"
 
 const popularPlatforms = [
   { name: "Facebook", url: "facebook.com", img: facebookImg },
@@ -23,160 +22,278 @@ const popularPlatforms = [
   { name: "X", url: "x.com", img: xImg },
   { name: "TikTok", url: "tiktok.com", img: tiktokImg },
   { name: "Snapchat", url: "snapchat.com", img: snapchatImg },
-];
+]
 
 export function WelcomePage({ onComplete }) {
-  const [selectedPlatforms, setSelectedPlatforms] = createSignal([]);
-  const [customUrl, setCustomUrl] = createSignal("");
-  const [error, setError] = createSignal("");
-  const [editIndex, setEditIndex] = createSignal(-1);
-  const [editUrl, setEditUrl] = createSignal("");
+  const [selectedPlatforms, setSelectedPlatforms] = createSignal([])
+  const [customUrl, setCustomUrl] = createSignal("")
+  const [error, setError] = createSignal("")
+  const [editIndex, setEditIndex] = createSignal(-1)
+  const [editUrl, setEditUrl] = createSignal("")
+  const [animateSelection, setAnimateSelection] = createSignal(false)
+  const [lastAction, setLastAction] = createSignal({ type: "", index: -1 })
 
   const togglePlatform = (platform) => {
     setSelectedPlatforms((prev) => {
-      if (prev.includes(platform)) {
-        return prev.filter((p) => p !== platform);
+      if (prev.some((p) => p.url === platform.url)) {
+        setLastAction({ type: "remove", index: prev.findIndex((p) => p.url === platform.url) })
+        return prev.filter((p) => p.url !== platform.url)
       } else {
-        return [...prev, platform];
+        setLastAction({ type: "add", index: prev.length })
+        setAnimateSelection(true)
+        setTimeout(() => setAnimateSelection(false), 500)
+        return [...prev, platform]
       }
-    });
-  };
+    })
+  }
 
   const validateUrl = (url) => {
-    const urlPattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$", "i" // fragment locator
-    );
-    return !!urlPattern.test(url);
-  };
+    if (!url) return false
+
+    let testUrl = url
+    if (!testUrl.match(/^https?:\/\//i)) {
+      testUrl = "http://" + testUrl
+    }
+
+    try {
+      new URL(testUrl)
+      return true
+    } catch (e) {
+      return false
+    }
+  }
 
   const addCustomUrl = () => {
-    if (customUrl() && validateUrl(customUrl())) {
-      if (!selectedPlatforms().find((p) => p.url === customUrl())) {
-        setSelectedPlatforms((prev) => [...prev, { name: customUrl(), url: customUrl() }]);
-        setCustomUrl("");
-        setError("");
+    if (!customUrl()) {
+      setError("Please enter a URL.")
+      animateError()
+      return
+    }
+
+    const url = customUrl()
+    const displayUrl = url.replace(/^https?:\/\//i, "")
+
+    if (validateUrl(url)) {
+      if (!selectedPlatforms().some((p) => p.url.toLowerCase() === displayUrl.toLowerCase())) {
+        setSelectedPlatforms((prev) => {
+          const newList = [...prev, { name: displayUrl, url: displayUrl }]
+          setLastAction({ type: "add", index: newList.length - 1 })
+          return newList
+        })
+        setCustomUrl("")
+        setError("")
+        setAnimateSelection(true)
+        setTimeout(() => setAnimateSelection(false), 500)
+      } else {
+        setError("This URL is already in your list.")
+        animateError()
       }
     } else {
-      setError("Please enter a valid URL.");
+      setError("Please enter a valid URL.")
+      animateError()
     }
-  };
+  }
+
+  const animateError = () => {
+    const inputElement = document.querySelector(".url-input")
+    if (inputElement) {
+      inputElement.classList.add("shake-animation")
+      setTimeout(() => {
+        inputElement.classList.remove("shake-animation")
+      }, 500)
+    }
+  }
 
   const handleEdit = (index) => {
-    setEditIndex(index);
-    setEditUrl(selectedPlatforms()[index].url);
-  };
+    setEditIndex(index)
+    setEditUrl(selectedPlatforms()[index].url)
+  }
 
   const saveEdit = (index) => {
     if (validateUrl(editUrl())) {
-      const updatedPlatforms = [...selectedPlatforms()];
-      updatedPlatforms[index] = { ...updatedPlatforms[index], url: editUrl() };
-      setSelectedPlatforms(updatedPlatforms);
-      setEditIndex(-1);
-      setEditUrl("");
+      const updatedPlatforms = [...selectedPlatforms()]
+      updatedPlatforms[index] = {
+        ...updatedPlatforms[index],
+        url: editUrl(),
+        name: editUrl().replace(/^https?:\/\//i, ""),
+      }
+      setSelectedPlatforms(updatedPlatforms)
+      setEditIndex(-1)
+      setEditUrl("")
+      setError("")
     } else {
-      setError("Please enter a valid URL.");
+      setError("Please enter a valid URL.")
+      animateError()
     }
-  };
+  }
 
   const deletePlatform = (index) => {
-    setSelectedPlatforms((prev) => prev.filter((_, i) => i !== index));
-  };
+    setLastAction({ type: "delete", index })
+    setSelectedPlatforms((prev) => prev.filter((_, i) => i !== index))
+  }
 
   const handleComplete = () => {
-    onComplete(selectedPlatforms());
-  };
+    if (selectedPlatforms().length === 0) {
+      setError("Please select at least one platform.")
+      return
+    }
+
+    const button = document.querySelector(".get-started-button")
+    if (button) {
+      button.classList.add("pulse-animation")
+      setTimeout(() => {
+        onComplete(selectedPlatforms())
+      }, 600)
+    } else {
+      onComplete(selectedPlatforms())
+    }
+  }
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      addCustomUrl()
+    }
+  }
 
   onMount(() => {
-    document.title = "Welcome to Growthackr";
-  });
-  
+    document.title = "Welcome to Growthackr"
+  })
+
   return (
     <div class="welcome-page">
-      <header>
+      <header class="welcome-header">
         <h2 class="title">Welcome to Growthackr</h2>
-        <ThemeSwitch />
+        <div class="theme-switch-wrapper">
+          <ThemeSwitch />
+        </div>
       </header>
+
       <div class="content">
-        <div class="right-section">
+        <div class="section right-section">
+          <h3 class="section-title">Popular Platforms</h3>
           <p class="description">Select the platforms you want to track:</p>
+
           <div class="platforms">
             <For each={popularPlatforms}>
               {(platform) => (
-                <Button
-                  variant={selectedPlatforms().includes(platform) ? "primary" : "outline"}
+                <button
+                  class={`platform-button ${selectedPlatforms().some((p) => p.url === platform.url) ? "selected" : ""}`}
                   onClick={() => togglePlatform(platform)}
-                  class={`platform-button ${selectedPlatforms().includes(platform) ? "selected" : ""}`}
-                  aria-pressed={selectedPlatforms().includes(platform)}
+                  aria-pressed={selectedPlatforms().some((p) => p.url === platform.url)}
                 >
-                  <img src={platform.img} alt={`${platform.name} logo`} class="platform-icon" />
-                  {platform.name}
-                </Button>
+                  <div class="platform-icon-wrapper">
+                    <img src={platform.img || "/placeholder.svg"} alt={`${platform.name} logo`} class="platform-icon" />
+                  </div>
+                  <span class="platform-button-text">{platform.name}</span>
+                </button>
               )}
             </For>
           </div>
         </div>
-        <div class="left-section">
+
+        <div class="section left-section">
+          <h3 class="section-title">Your Selection</h3>
           <p class="description">Selected platforms:</p>
-          <ul class="selected-list">
-            <For each={selectedPlatforms()}>
-              {(platform, index) => (
-                <li class="selected-item">
-                  <span class="platform-name">{platform.name}</span>
-                  <div class="icon-container">
-                    <img
-                      src={editIcon}
-                      alt={`Edit ${platform.name}`}
-                      class="icon"
-                      onClick={() => handleEdit(index())}
-                      aria-label={`Edit ${platform.name}`}
-                    />
-                    <img
-                      src={deleteIcon}
-                      alt={`Delete ${platform.name}`}
-                      class="icon"
-                      onClick={() => deletePlatform(index())}
-                      aria-label={`Delete ${platform.name}`}
-                    />
-                  </div>
-                  {editIndex() === index() && (
-                    <div>
-                      <Input
-                        type="text"
-                        value={editUrl()}
-                        onInput={(e) => setEditUrl(e.target.value)}
-                        aria-label={`Edit URL for ${platform.name}`}
-                      />
-                      <Button onClick={() => saveEdit(index())} aria-label="Save changes">
-                        Save
-                      </Button>
-                    </div>
+
+          <div class="selected-container">
+            <Show
+              when={selectedPlatforms().length > 0}
+              fallback={
+                <div class="empty-selection">
+                  <p>No platforms selected yet. Choose from popular platforms or add a custom URL.</p>
+                </div>
+              }
+            >
+              <ul class="selected-list">
+                <For each={selectedPlatforms()}>
+                  {(platform, index) => (
+                    <li
+                      class={`selected-item ${lastAction().type === "add" && lastAction().index === index() ? "item-added" : ""}`}
+                    >
+                      <Show
+                        when={editIndex() !== index()}
+                        fallback={
+                          <div class="edit-container">
+                            <Input
+                              type="text"
+                              value={editUrl()}
+                              onInput={(e) => setEditUrl(e.target.value)}
+                              onKeyPress={handleKeyPress}
+                              class="edit-input"
+                              aria-label={`Edit URL for ${platform.name}`}
+                            />
+                            <div class="edit-actions">
+                              <Button
+                                onClick={() => saveEdit(index())}
+                                class="save-edit-button"
+                                aria-label="Save changes"
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                onClick={() => setEditIndex(-1)}
+                                class="cancel-edit-button"
+                                aria-label="Cancel editing"
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </div>
+                        }
+                      >
+                        <div class="platform-info">
+                          <span class="platform-name">{platform.name}</span>
+                        </div>
+                        <div class="icon-container">
+                          <button
+                            class="icon-button edit-button"
+                            onClick={() => handleEdit(index())}
+                            aria-label={`Edit ${platform.name}`}
+                          >
+                            <img src={editIcon || "/placeholder.svg"} alt="Edit" class="action-icon" />
+                          </button>
+                          <button
+                            class="icon-button delete-button"
+                            onClick={() => deletePlatform(index())}
+                            aria-label={`Delete ${platform.name}`}
+                          >
+                            <img src={deleteIcon || "/placeholder.svg"} alt="Delete" class="action-icon" />
+                          </button>
+                        </div>
+                      </Show>
+                    </li>
                   )}
-                </li>
-              )}
-            </For>
-            <div class="input-group">
-              <Input
-                type="text"
-                placeholder="Enter URL (e.g., example.com)"
-                value={customUrl()}
-                onInput={(e) => setCustomUrl(e.target.value)}
-                class="url-input"
-                aria-label="Custom URL"
-              />
-              <Button onClick={addCustomUrl} class="add-button">
-                <img src={plusIcon} alt="Add" class="plus-icon" />
-              </Button>
+                </For>
+              </ul>
+            </Show>
+
+            <div class="custom-url-section">
+              <h4 class="custom-url-title">Add Custom URL</h4>
+              <div class="input-group">
+                <Input
+                  type="text"
+                  placeholder="Enter URL (e.g., example.com)"
+                  value={customUrl()}
+                  onInput={(e) => setCustomUrl(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  class="url-input"
+                  aria-label="Custom URL"
+                />
+                <button class="add-button" onClick={addCustomUrl} aria-label="Add custom URL">
+                  <img src={plusIcon || "/placeholder.svg"} alt="Add" class="plus-icon" />
+                </button>
+              </div>
+              <Show when={error()}>
+                <p class="error-message">{error()}</p>
+              </Show>
             </div>
-            {error() && <p class="error-message">{error()}</p>}
-          </ul>
+          </div>
         </div>
       </div>
-      <GetStartedButton onClick={handleComplete} />
+
+      <div class="footer">
+        <GetStartedButton class="get-started-button" onClick={handleComplete} />
+      </div>
     </div>
-  );
+  )
 }
