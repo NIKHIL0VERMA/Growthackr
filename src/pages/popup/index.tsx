@@ -1,10 +1,12 @@
 import { render } from 'solid-js/web'
 import { UsageTracker } from './components/UsageTracker'
-import { ThemeSwitch, isDarkMode } from '@src/components/ThemeSwitch'
+import { ThemeSwitch } from '@src/components/common/ThemeSwitch'
+import { ThemeProvider, useTheme } from '@src/components/common/ThemeProvider'
 import "@assets/styles/global.css"
 import "@pages/popup/index.css"
 
-const App = () => {
+const AppContent = () => {
+  const { isDarkMode } = useTheme();
 
   return (
     <div class={`app ${isDarkMode() ? 'dark' : 'light'}`}>
@@ -14,9 +16,17 @@ const App = () => {
         <ThemeSwitch/>
       </header>
       <main>
-            <UsageTracker/>
+        <UsageTracker/>
       </main>
     </div>
+  )
+}
+
+const App = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   )
 }
 

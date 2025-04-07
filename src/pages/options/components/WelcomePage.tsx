@@ -1,8 +1,8 @@
 import { createSignal, For, onMount, Show } from "solid-js"
-import { Input } from "@src/components/Input"
-import { Button } from "@src/components/Button"
-import { ThemeSwitch } from "@src/components/ThemeSwitch"
-import GetStartedButton from "@src/components/GetStartedButton"
+import { Input } from "@src/components/ui/Input"
+import { Button } from "@src/components/ui/Button"
+import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
+import GetStartedButton from "@src/components/common/GetStartedButton"
 import "@pages/options/styles/WelcomePage.css"
 
 import facebookImg from "@assets/img/facebook.svg"

@@ -1,4 +1,4 @@
-import { colorLog, LogTypes } from "@utils/logger";
+import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "./utilities";
 import { blockSite } from "../blocking";
 

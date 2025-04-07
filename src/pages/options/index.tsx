@@ -1,15 +1,14 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import "@assets/styles/global.css"
-import { isDarkMode } from '@src/components/ThemeSwitch'
+import { ThemeProvider, useTheme } from '@src/components/common/ThemeProvider'
 import { WelcomePage } from '@src/pages/options/components/WelcomePage'
-import { colorLog, LogTypes } from '@utils/logger'
-import {OptionsPage} from '@src/pages/options/components/OptionsPage'
+import { colorLog, LogTypes } from '@src/shared/utils/logger'
+import { OptionsPage } from '@src/pages/options/components/OptionsPage'
 
-const Index = () => {
+const OptionsContent = () => {
   const [welcomeShown, setwelcomeShown] = createSignal(false);
-
-  const [currentView, setCurrentView] = createSignal('main');
+  const { isDarkMode } = useTheme();
 
   const handleWelcomeComplete = (platformList) => {
     chrome.runtime.sendMessage({action: 'welcomeCompleted', value: false}, (response) =>{
@@ -31,7 +30,7 @@ const Index = () => {
   };
 
   onMount(() => {
-    chrome.storage.local.get(['welcome'], (res) => { // Convert this to central background
+    chrome.storage.local.get(['welcome'], (res) => {
       if(res.welcome !== false){
         setwelcomeShown(true);
       }
@@ -41,11 +40,19 @@ const Index = () => {
   return (
     <div class={`app ${isDarkMode() ? 'dark' : 'light'}`}>
       <main>
-          {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
-            : (<OptionsPage setCurrentView={setCurrentView()}/>)
-            }
+        {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
+          : (<OptionsPage />)
+        }
       </main>
     </div>
+  )
+}
+
+const Index = () => {
+  return (
+    <ThemeProvider>
+      <OptionsContent />
+    </ThemeProvider>
   )
 }
 

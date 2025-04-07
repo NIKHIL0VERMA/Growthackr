@@ -1,5 +1,5 @@
 import { createSignal, For } from "solid-js"
-import { ThemeSwitch } from "@src/components/ThemeSwitch"
+import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import "@pages/options/styles/optionPage.css"
 
 import facebookImg from "@assets/img/facebook.svg"

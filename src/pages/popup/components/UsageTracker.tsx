@@ -1,5 +1,5 @@
 import { createSignal, For, onMount } from 'solid-js'
-import { Button } from '@src/components/Button';
+import { Button } from '@src/components/ui/Button';
 import Speedometer from './Speedometer'
 
 export function UsageTracker() {

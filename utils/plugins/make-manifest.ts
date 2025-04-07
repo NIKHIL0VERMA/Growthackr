@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { PluginOption } from "vite";
 import manifest from "../../src/manifest";
-import colorLog from "../log";
+import {colorLog, LogTypes} from "@src/shared/utils/logger";
 
 const { resolve } = path;
 
@@ -20,7 +20,7 @@ export default function makeManifest(): PluginOption {
 
       fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-      colorLog(`Manifest file copy complete: ${manifestPath}`, "success");
+      colorLog(`Manifest file copy complete: ${manifestPath}`, LogTypes.SUCCESS);
     },
   };
 }

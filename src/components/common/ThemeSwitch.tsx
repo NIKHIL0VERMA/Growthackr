@@ -1,11 +1,7 @@
-import { onMount } from 'solid-js';
-import { toggleTheme, isDarkMode } from '@utils/themeStore';
-export { isDarkMode };
+import { useTheme } from './ThemeProvider';
 
 export function ThemeSwitch() {
-  onMount(() => {
-    document.body.classList.toggle('dark', isDarkMode());
-  });
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <button
