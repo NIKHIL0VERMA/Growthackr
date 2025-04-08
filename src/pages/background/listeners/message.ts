@@ -1,0 +1,124 @@
+import { ExtensionMessage, MessageAction, MessageResponse, SuccessResponse, AddPlatformMessage } from '@src/shared/types/messages';
+import { updateStorage, getStorageData, addPlatform, updatePlatform, clearStorage } from '../services/storage';
+import { colorLog, LogTypes } from "@src/shared/utils/logger";
+import { Platform } from '../types/storage';
+
+/**
+ * Handles incoming messages from other parts of the extension
+ * @param message - The message to handle
+ * @returns Promise resolving to the response
+ */
+export const handleMessage = async (message: ExtensionMessage): Promise<MessageResponse> => {
+  try {
+    const { action } = message;
+    switch (action) {
+      case MessageAction.WELCOME_COMPLETED:
+        return handleWelcomeCompleted();
+      case MessageAction.CLOSE_TAB:
+        return handleCloseTab();
+      case MessageAction.CLOSE_OPTIONS_PAGE:
+        return handleCloseOptionsPage();
+      case MessageAction.GET_TIME_SPENT:
+        return handleGetTimeSpent();
+      case MessageAction.GET_PLATFORMS:
+        return handleGetPlatforms();
+      case MessageAction.ADD_PLATFORM:
+        return handleAddPlatform(message as AddPlatformMessage);
+      case MessageAction.UPDATE_PLATFORM:
+        return handleUpdatePlatform(message);
+      case MessageAction.CLEAR_STORAGE:
+        return handleClearStorage();
+      default:
+        throw new Error(`Unknown message action: ${action}`);
+    }
+  } catch (error) {
+    colorLog(`Error handling message: ${error}`, LogTypes.ERROR);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    };
+  }
+};
+
+/**
+ * Handles welcome completed message
+ */
+const handleWelcomeCompleted = async (): Promise<SuccessResponse> => {
+  await updateStorage({ welcome: false });
+  return { success: true };
+};
+
+/**
+ * Handles close tab message
+ */
+const handleCloseTab = async (): Promise<SuccessResponse> => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tab?.id) {
+    await chrome.tabs.remove(tab.id);
+  }
+  return { success: true };
+};
+
+/**
+ * Handles close options page message
+ */
+const handleCloseOptionsPage = async (): Promise<SuccessResponse> => {
+  const [tab] = await chrome.tabs.query({ url: chrome.runtime.getURL('options.html') });
+  if (tab?.id) {
+    await chrome.tabs.remove(tab.id);
+  }
+  return { success: true };
+};
+
+/**
+ * Handles get time spent message
+ */
+const handleGetTimeSpent = async (): Promise<SuccessResponse> => {
+  const data = await getStorageData();
+  return { success: true, data: data.timeSpent };
+};
+
+/**
+ * Handles get platforms message
+ */
+const handleGetPlatforms = async (): Promise<SuccessResponse> => {
+  const data = await getStorageData();
+  return { success: true, data: data.platforms };
+};
+
+/**
+ * Handles add platform message
+ */
+const handleAddPlatform = async (message: AddPlatformMessage): Promise<SuccessResponse> => {
+  if (message.platforms) {
+    // Handle array of platforms
+    for (const platform of message.platforms) {
+      await addPlatform(platform);
+    }
+    return { success: true };
+  } else if (message.platform) {
+    // Handle single platform (for backward compatibility)
+    await addPlatform(message.platform);
+    return { success: true };
+  }
+  throw new Error('Platform data missing from message');
+};
+
+/**
+ * Handles update platform message
+ */
+const handleUpdatePlatform = async (message: ExtensionMessage): Promise<SuccessResponse> => {
+  if ('platform' in message) {
+    await updatePlatform(message.platform);
+    return { success: true };
+  }
+  throw new Error('Platform data missing from message');
+};
+
+/**
+ * Handles clear storage message
+ */
+const handleClearStorage = async (): Promise<SuccessResponse> => {
+  await clearStorage();
+  return { success: true };
+}; 
