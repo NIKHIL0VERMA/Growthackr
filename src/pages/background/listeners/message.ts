@@ -1,7 +1,8 @@
-import { ExtensionMessage, MessageAction, MessageResponse, SuccessResponse, AddPlatformMessage } from '@src/shared/types/messages';
-import { updateStorage, getStorageData, addPlatform, updatePlatform, clearStorage } from '../services/storage';
+import { ExtensionMessage, MessageAction, MessageResponse, AddPlatformMessage, UpdatePlatformMessage, SetPlatformsMessage } from '@src/shared/types/messages';
+import { updateStorage, getStorageData, addPlatform, updatePlatform, clearStorage, setPlatforms } from '../services/storage';
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { Platform } from '../types/storage';
+import { platform } from 'os';
 
 /**
  * Handles incoming messages from other parts of the extension
@@ -22,10 +23,12 @@ export const handleMessage = async (message: ExtensionMessage): Promise<MessageR
         return handleGetTimeSpent();
       case MessageAction.GET_PLATFORMS:
         return handleGetPlatforms();
+      case MessageAction.SET_PLATFORMS:
+        return handleSetPlatforms(message as SetPlatformsMessage);
       case MessageAction.ADD_PLATFORM:
         return handleAddPlatform(message as AddPlatformMessage);
       case MessageAction.UPDATE_PLATFORM:
-        return handleUpdatePlatform(message);
+        return handleUpdatePlatform(message as UpdatePlatformMessage);
       case MessageAction.CLEAR_STORAGE:
         return handleClearStorage();
       default:
@@ -43,7 +46,7 @@ export const handleMessage = async (message: ExtensionMessage): Promise<MessageR
 /**
  * Handles welcome completed message
  */
-const handleWelcomeCompleted = async (): Promise<SuccessResponse> => {
+const handleWelcomeCompleted = async (): Promise<MessageResponse> => {
   await updateStorage({ welcome: false });
   return { success: true };
 };
@@ -51,29 +54,31 @@ const handleWelcomeCompleted = async (): Promise<SuccessResponse> => {
 /**
  * Handles close tab message
  */
-const handleCloseTab = async (): Promise<SuccessResponse> => {
+const handleCloseTab = async (): Promise<MessageResponse> => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab?.id) {
     await chrome.tabs.remove(tab.id);
+    return {success: true};
   }
-  return { success: true };
+  return { success: false, error: `Couldn't close current tab with id ${tab?.id}` };
 };
 
 /**
  * Handles close options page message
  */
-const handleCloseOptionsPage = async (): Promise<SuccessResponse> => {
-  const [tab] = await chrome.tabs.query({ url: chrome.runtime.getURL('options.html') });
+const handleCloseOptionsPage = async (): Promise<MessageResponse> => {
+  const [tab] = await chrome.tabs.query({ url: chrome.runtime.getURL('src/pages/options/index.html') });
   if (tab?.id) {
     await chrome.tabs.remove(tab.id);
+    return {success: true};
   }
-  return { success: true };
+  return { success: false,error: "Something went wrong while closing welcome page" };
 };
 
 /**
  * Handles get time spent message
  */
-const handleGetTimeSpent = async (): Promise<SuccessResponse> => {
+const handleGetTimeSpent = async (): Promise<MessageResponse> => {
   const data = await getStorageData();
   return { success: true, data: data.timeSpent };
 };
@@ -81,18 +86,23 @@ const handleGetTimeSpent = async (): Promise<SuccessResponse> => {
 /**
  * Handles get platforms message
  */
-const handleGetPlatforms = async (): Promise<SuccessResponse> => {
+const handleGetPlatforms = async (): Promise<MessageResponse> => {
   const data = await getStorageData();
   return { success: true, data: data.platforms };
 };
 
+const handleSetPlatforms = async (message : SetPlatformsMessage): Promise<MessageResponse> => {
+  await setPlatforms(message.platforms);
+  return {success: true};
+}
+
 /**
  * Handles add platform message
  */
-const handleAddPlatform = async (message: AddPlatformMessage): Promise<SuccessResponse> => {
+const handleAddPlatform = async (message: AddPlatformMessage): Promise<MessageResponse> => {
   if (message.platforms) {
     // Handle array of platforms
-    for (const platform of message.platforms) {
+    for (const platform of message.platforms) { 
       await addPlatform(platform);
     }
     return { success: true };
@@ -107,7 +117,7 @@ const handleAddPlatform = async (message: AddPlatformMessage): Promise<SuccessRe
 /**
  * Handles update platform message
  */
-const handleUpdatePlatform = async (message: ExtensionMessage): Promise<SuccessResponse> => {
+const handleUpdatePlatform = async (message: ExtensionMessage): Promise<MessageResponse> => {
   if ('platform' in message) {
     await updatePlatform(message.platform);
     return { success: true };
@@ -118,7 +128,7 @@ const handleUpdatePlatform = async (message: ExtensionMessage): Promise<SuccessR
 /**
  * Handles clear storage message
  */
-const handleClearStorage = async (): Promise<SuccessResponse> => {
+const handleClearStorage = async (): Promise<MessageResponse> => {
   await clearStorage();
   return { success: true };
 }; 

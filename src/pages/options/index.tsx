@@ -33,7 +33,7 @@ const OptionsContent = () => {
 
       // Send all platforms in a single message
       const platformResponse = await chrome.runtime.sendMessage({
-        action: MessageAction.ADD_PLATFORM,
+        action: MessageAction.SET_PLATFORMS,
         platforms // Send the entire list at once
       });
 

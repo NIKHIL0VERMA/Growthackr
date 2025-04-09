@@ -1,5 +1,5 @@
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
-import { extractHostName, isValidPage } from "../utilities";
+import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "../../blocking";
 import { getStorageData, setTimeSpent } from "./storage";
 import { Platform } from "../types/storage";

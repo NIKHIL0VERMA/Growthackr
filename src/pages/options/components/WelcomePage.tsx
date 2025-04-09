@@ -4,6 +4,7 @@ import { Button } from "@src/components/ui/Button"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import GetStartedButton from "@src/components/common/GetStartedButton"
 import "@pages/options/styles/WelcomePage.css"
+import {extractHostName, isValidPage, removeTLD, validateUrl} from "@src/shared/utils/utilities"
 
 import facebookImg from "@assets/img/facebook.svg"
 import youtubeImg from "@assets/img/youtube.svg"
@@ -47,21 +48,6 @@ export function WelcomePage({ onComplete }) {
     })
   }
 
-  const validateUrl = (url) => {
-    if (!url) return false
-
-    let testUrl = url
-    if (!testUrl.match(/^https?:\/\//i)) {
-      testUrl = "http://" + testUrl
-    }
-
-    try {
-      new URL(testUrl)
-      return true
-    } catch (e) {
-      return false
-    }
-  }
 
   const addCustomUrl = () => {
     if (!customUrl()) {
@@ -70,28 +56,31 @@ export function WelcomePage({ onComplete }) {
       return
     }
 
-    const url = customUrl()
-    const displayUrl = url.replace(/^https?:\/\//i, "")
-
-    if (validateUrl(url)) {
-      if (!selectedPlatforms().some((p) => p.url.toLowerCase() === displayUrl.toLowerCase())) {
-        setSelectedPlatforms((prev) => {
-          const newList = [...prev, { name: displayUrl, url: displayUrl }]
-          setLastAction({ type: "add", index: newList.length - 1 })
-          return newList
-        })
-        setCustomUrl("")
-        setError("")
-        setAnimateSelection(true)
-        setTimeout(() => setAnimateSelection(false), 500)
-      } else {
-        setError("This URL is already in your list.")
-        animateError()
-      }
-    } else {
-      setError("Please enter a valid URL.")
-      animateError()
+    const url = customUrl();
+    if(!validateUrl(url)){
+      setError("Please enter a valid URL.");
+      animateError();
+      return;
     }
+
+    const hostname = extractHostName(url);
+
+    if(selectedPlatforms().some((p) => p.url.toLowerCase() === hostname.toLowerCase())){
+      setError("This URL is already in your list.");
+      animateError();
+      return;
+    }
+
+    const display_name = removeTLD(hostname);
+    setSelectedPlatforms((prev) => {
+      const newList = [...prev, { name: display_name, url: hostname }];
+      setLastAction({ type: "add", index: newList.length - 1 });
+      return newList;
+    });
+    setCustomUrl("");
+    setError("");
+    setAnimateSelection(true);
+    setTimeout(() => setAnimateSelection(false), 500);
   }
 
   const animateError = () => {

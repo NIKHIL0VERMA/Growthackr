@@ -10,6 +10,7 @@ export enum MessageAction {
   CLOSE_OPTIONS_PAGE = 'closeOptionsPage',
   GET_TIME_SPENT = 'getTimeSpent',
   GET_PLATFORMS = 'getPlatforms',
+  SET_PLATFORMS = 'setPlatforms',
   ADD_PLATFORM = 'addPlatform',
   UPDATE_PLATFORM = 'updatePlatform',
   CLEAR_STORAGE = 'clear'
@@ -59,6 +60,14 @@ export interface GetPlatformsMessage extends BaseMessage {
 }
 
 /**
+ * Message to set platforms list
+ */
+export interface SetPlatformsMessage extends BaseMessage {
+  action: MessageAction.SET_PLATFORMS;
+  platforms: Platform[];
+}
+
+/**
  * Message to add a new platform or platforms
  */
 export interface AddPlatformMessage extends BaseMessage {
@@ -94,6 +103,7 @@ export type ExtensionMessage =
   | CloseOptionsPageMessage
   | GetTimeSpentMessage
   | GetPlatformsMessage
+  | SetPlatformsMessage
   | AddPlatformMessage
   | UpdatePlatformMessage
   | ClearStorageMessage;

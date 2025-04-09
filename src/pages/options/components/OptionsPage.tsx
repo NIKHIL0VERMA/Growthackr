@@ -1,35 +1,29 @@
-import { createSignal, For } from "solid-js"
+import { createEffect, createSignal, For } from "solid-js"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import "@pages/options/styles/optionPage.css"
 
-import facebookImg from "@assets/img/facebook.svg"
-import youtubeImg from "@assets/img/youtube.svg"
-import instagramImg from "@assets/img/instagram.svg"
-import xImg from "@assets/img/x.svg"
-import tiktokImg from "@assets/img/tiktok.svg"
-import snapchatImg from "@assets/img/snapchat.svg"
+import { MessageAction } from "@src/shared/types/messages"
+import { colorLog, LogTypes } from "@src/shared/utils/logger";
 
 export function OptionsPage() {
-  const platforms = [
-    { name: "Facebook", url: "facebook.com", img: facebookImg },
-    { name: "YouTube", url: "youtube.com", img: youtubeImg },
-    { name: "Instagram", url: "instagram.com", img: instagramImg },
-    { name: "X", url: "x.com", img: xImg },
-    { name: "TikTok", url: "tiktok.com", img: tiktokImg },
-    { name: "Snapchat", url: "snapchat.com", img: snapchatImg },
-    { name: "LinkedIn", url: "linkedin.com", img: facebookImg },
-    { name: "Pinterest", url: "pinterest.com", img: youtubeImg },
-    { name: "Reddit", url: "reddit.com", img: instagramImg },
-    { name: "Twitch", url: "twitch.tv", img: xImg },
-    { name: "Discord", url: "discord.com", img: tiktokImg },
-    { name: "WhatsApp", url: "whatsapp.com", img: snapchatImg },
-  ]
-
+  const [platforms, setPlatforms] = createSignal(null);
   const [selectedPlatform, setSelectedPlatform] = createSignal(null)
   const [hours, setHours] = createSignal(0)
   const [minutes, setMinutes] = createSignal(0)
   const [isExpanded, setIsExpanded] = createSignal(false)
   const [animatingOut, setAnimatingOut] = createSignal(false)
+
+  createEffect(() => {
+    const fetchPlatforms = async () => {
+      const stored_platforms = await chrome.runtime.sendMessage({
+        action: MessageAction.GET_PLATFORMS
+      });
+      setPlatforms(stored_platforms.data);
+      colorLog(`Got this platform list ${stored_platforms.data}`, LogTypes.INFO);
+    };
+
+    fetchPlatforms();
+  });
 
   const handlePlatformSelect = (platform) => {
     if (selectedPlatform() === platform) {
@@ -98,7 +92,7 @@ export function OptionsPage() {
         <div class={`platforms-container ${isExpanded() ? "expanded" : ""} ${animatingOut() ? "animating-out" : ""}`}>
           <h2 class="section-title">Select Platforms</h2>
           <div class="platforms-list">
-            <For each={platforms}>
+            <For each={platforms()}>
               {(platform) => (
                 <button
                   class={`platform-button ${selectedPlatform() === platform.name ? "selected" : ""}`}

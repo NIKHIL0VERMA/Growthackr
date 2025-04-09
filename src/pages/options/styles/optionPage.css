@@ -32,7 +32,7 @@
   .platforms-container {
     width: 400px;
     max-height: 80vh;
-    background-color: white;
+    background-color: var(--bg-color);
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     padding: 24px;
@@ -149,7 +149,7 @@
   /* Time limit container */
   .time-limit-container {
     width: 400px;
-    background-color: white;
+    background-color: var(--bg-color);
     border-radius: 16px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     padding: 24px;
@@ -236,7 +236,7 @@
   
   .save-button {
     background-color: var(--fg-color);
-    color: white;
+    color: var(--text-color);
     position: relative;
     overflow: hidden;
   }

@@ -53,6 +53,7 @@ export const updateStorage = async (updates: Partial<StorageData>): Promise<void
         resolve();
       });
     });
+    return;
   } catch (error) {
     colorLog(`Failed to update storage: ${error}`, LogTypes.ERROR);
     throw new StorageError('Failed to update storage');
@@ -84,7 +85,12 @@ export const setPlatforms = async (platforms: Platform[]): Promise<void> => {
  */
 export const addPlatform = async (platform: Platform): Promise<void> => {
   const data = await getStorageData();
-  const platforms = [...new Set([...(data.platforms || []), platform])];
+  const platforms = data.platforms || [];
+
+  const isPlatformExist = platforms.some(p => p.url === platform.url);
+  if(!isPlatformExist){
+    platforms.push(platform);
+  }
   await updateStorage({ platforms });
 };
 
