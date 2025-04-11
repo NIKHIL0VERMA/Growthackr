@@ -1,32 +1,30 @@
-import { createEffect, createSignal, For } from "solid-js"
+import { createSignal, Suspense, createResource} from "solid-js"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
-import "@pages/options/styles/optionPage.css"
+import "@pages/options/styles/platformManager.css"
 
-import { MessageAction } from "@src/shared/types/messages"
+import { MessageAction, SuccessResponse } from "@src/shared/types/messages"
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
+import { PlatformList } from "./PlatformsList";
+import { Platform } from "@src/pages/background/types/storage";
+import { UpdatePlatformMessage } from "@src/shared/types/messages";
 
-export function OptionsPage() {
-  const [platforms, setPlatforms] = createSignal(null);
+
+export function PlatformManager() {
   const [selectedPlatform, setSelectedPlatform] = createSignal(null)
   const [hours, setHours] = createSignal(0)
   const [minutes, setMinutes] = createSignal(0)
   const [isExpanded, setIsExpanded] = createSignal(false)
   const [animatingOut, setAnimatingOut] = createSignal(false)
 
-  createEffect(() => {
-    const fetchPlatforms = async () => {
-      const stored_platforms = await chrome.runtime.sendMessage({
+  const [platforms] = createResource(async () => {
+      const stored_platforms : SuccessResponse<Platform[]> = await chrome.runtime.sendMessage({
         action: MessageAction.GET_PLATFORMS
       });
-      setPlatforms(stored_platforms.data);
-      colorLog(`Got this platform list ${stored_platforms.data}`, LogTypes.INFO);
-    };
-
-    fetchPlatforms();
+      return stored_platforms.data;
   });
 
-  const handlePlatformSelect = (platform) => {
-    if (selectedPlatform() === platform) {
+  const handlePlatformSelect = (platform : Platform) => {
+    if (selectedPlatform() === platform.name) {
       setAnimatingOut(true)
       setTimeout(() => {
         setSelectedPlatform(null)
@@ -36,19 +34,32 @@ export function OptionsPage() {
         setAnimatingOut(false)
       }, 300)
     } else {
-      setSelectedPlatform(platform)
-      setHours(0)
-      setMinutes(0)
-      setIsExpanded(true)
+      setSelectedPlatform(platform.name);
+      setHours(platform.timeLimit.hours);
+      setMinutes(platform.timeLimit.minutes);
+      setIsExpanded(true);
     }
   }
 
   const saveSettings = () => {
-    console.log("Saving settings:", {
-      platform: selectedPlatform(),
-      hours: hours(),
-      minutes: minutes(),
-    })
+    const updatePlatformTimeLimit = async () => {
+      const hr = hours();
+      const mn = minutes();
+      let selectedPlatformData : Platform = platforms().find(platform => platform.name === selectedPlatform());
+      selectedPlatformData.timeLimit.hours = hr;
+      selectedPlatformData.timeLimit.minutes = mn;
+      const updateMessage: UpdatePlatformMessage = {
+        action: MessageAction.UPDATE_PLATFORM,
+        platform: selectedPlatformData
+      };
+      const response = await chrome.runtime.sendMessage(updateMessage);
+      if (response.success) {
+        colorLog(`Time limit updated for ${selectedPlatformData.name} to ${selectedPlatformData.timeLimit.hours} hours and ${selectedPlatformData.timeLimit.minutes} minutes`, LogTypes.INFO);
+      } else {
+        colorLog(`Failed to update time limit for ${selectedPlatformData.name}: ${response.error}`, LogTypes.ERROR);
+      }
+    };
+    updatePlatformTimeLimit();
 
     const saveButton = document.querySelector(".save-button")
     saveButton.classList.add("save-success")
@@ -83,30 +94,23 @@ export function OptionsPage() {
   }
 
   return (
-    <div class="platform-manager">
-      <div class="theme-switch-container">
-        <ThemeSwitch />
-      </div>
+    <div class="page-container">
+      <header class="header">
+        <h2 class="title">Growthackr options</h2>
+        <div class="theme-switch-wrapper">
+          <ThemeSwitch />
+        </div>
+      </header>
 
       <div class="content-container">
         <div class={`platforms-container ${isExpanded() ? "expanded" : ""} ${animatingOut() ? "animating-out" : ""}`}>
           <h2 class="section-title">Select Platforms</h2>
-          <div class="platforms-list">
-            <For each={platforms()}>
-              {(platform) => (
-                <button
-                  class={`platform-button ${selectedPlatform() === platform.name ? "selected" : ""}`}
-                  onClick={() => handlePlatformSelect(platform.name)}
-                  aria-pressed={selectedPlatform() === platform.name}
-                >
-                  <div class="platform-icon-container">
-                    <img src={platform.img || "/placeholder.svg"} alt={`${platform.name} logo`} class="platform-icon" />
-                  </div>
-                  <span class="platform-name">{platform.name}</span>
-                </button>
-              )}
-            </For>
-          </div>
+          {!!!platforms() && <div>Loading platforms...</div>}
+          {platforms() && <PlatformList
+              platforms={platforms()}
+              isSelected={(platform: Platform) => selectedPlatform() === platform.name}
+              onSelect={handlePlatformSelect}
+            />}
         </div>
 
         <div class={`time-limit-container ${isExpanded() ? "expanded" : ""} ${animatingOut() ? "animating-out" : ""}`}>

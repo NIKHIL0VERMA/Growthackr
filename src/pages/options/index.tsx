@@ -1,10 +1,11 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
 import "@assets/styles/global.css"
+import "@pages/options/styles/option.css"
 import { ThemeProvider, useTheme } from '@src/components/common/ThemeProvider'
 import { WelcomePage } from '@src/pages/options/components/WelcomePage'
 import { colorLog, LogTypes } from '@src/shared/utils/logger'
-import { OptionsPage } from '@src/pages/options/components/OptionsPage'
+import { PlatformManager } from '@src/pages/options/components/PlatformManager'
 import { MessageAction } from '@src/shared/types/messages'
 import { Platform } from '@src/pages/background/types/storage'
 
@@ -75,7 +76,7 @@ const OptionsContent = () => {
     <div class={`app ${isDarkMode() ? 'dark' : 'light'}`}>
       <main>
         {welcomeShown() ? (<WelcomePage onComplete={handleWelcomeComplete} />)
-          : (<OptionsPage />)
+          : (<PlatformManager />)
         }
       </main>
     </div>

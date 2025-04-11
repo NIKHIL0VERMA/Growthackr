@@ -5,7 +5,6 @@ const GetStartedButton = (props) => {
   const [isHovered, setIsHovered] = createSignal(false);
 
   return (
-    <div class="styled-wrapper">
       <button
         class={`cssbuttons-io-button ${isHovered() ? "hover" : ""}`}
         onClick={props.onClick}
@@ -20,7 +19,6 @@ const GetStartedButton = (props) => {
           </svg>
         </div>
       </button>
-    </div>
   );
 };
 

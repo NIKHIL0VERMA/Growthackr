@@ -1,9 +1,3 @@
-.styled-wrapper {
-  display: flex;
-  margin-bottom: 15px;
-  justify-content: center; /* Center the button */
-}
-
 .cssbuttons-io-button {
   background: var(--fg-color);
   color: var(--text-color);

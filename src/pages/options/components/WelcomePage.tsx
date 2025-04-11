@@ -5,24 +5,19 @@ import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import GetStartedButton from "@src/components/common/GetStartedButton"
 import "@pages/options/styles/WelcomePage.css"
 import {extractHostName, isValidPage, removeTLD, validateUrl} from "@src/shared/utils/utilities"
+import { PlatformList } from "./PlatformsList"
+import { faFacebook, faYoutube, faInstagram, faXTwitter, faTiktok, faSnapchat } from "@fortawesome/free-brands-svg-icons"
+import { Platform } from "@src/pages/background/types/storage"
+import { faDeleteLeft, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import facebookImg from "@assets/img/facebook.svg"
-import youtubeImg from "@assets/img/youtube.svg"
-import instagramImg from "@assets/img/instagram.svg"
-import xImg from "@assets/img/x.svg"
-import tiktokImg from "@assets/img/tiktok.svg"
-import snapchatImg from "@assets/img/snapchat.svg"
-import editIcon from "@assets/img/edit.svg"
-import deleteIcon from "@assets/img/delete.svg"
-import plusIcon from "@assets/img/plus.svg"
-
-const popularPlatforms = [
-  { name: "Facebook", url: "facebook.com", img: facebookImg },
-  { name: "YouTube", url: "youtube.com", img: youtubeImg },
-  { name: "Instagram", url: "instagram.com", img: instagramImg },
-  { name: "X", url: "x.com", img: xImg },
-  { name: "TikTok", url: "tiktok.com", img: tiktokImg },
-  { name: "Snapchat", url: "snapchat.com", img: snapchatImg },
+const popularPlatforms : Platform[] = [
+  { name: "Facebook", url: "facebook.com", icon: faFacebook, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
+  { name: "YouTube", url: "youtube.com", icon: faYoutube, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
+  { name: "Instagram", url: "instagram.com", icon: faInstagram, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
+  { name: "X", url: "x.com", icon: faXTwitter, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
+  { name: "TikTok", url: "tiktok.com", timeLimit: {hours : 0, minutes: 0.1}, icon: faTiktok, isCustom: false},
+  { name: "Snapchat", url: "snapchat.com", timeLimit: {hours : 0, minutes: 0.1}, icon: faSnapchat, isCustom: false },
 ]
 
 export function WelcomePage({ onComplete }) {
@@ -149,35 +144,24 @@ export function WelcomePage({ onComplete }) {
   })
 
   return (
-    <div class="welcome-page">
-      <header class="welcome-header">
+    <div class="page-container">
+      <header class="header">
         <h2 class="title">Welcome to Growthackr</h2>
         <div class="theme-switch-wrapper">
           <ThemeSwitch />
         </div>
       </header>
 
-      <div class="content">
+      <div class="content-container">
         <div class="section right-section">
           <h3 class="section-title">Popular Platforms</h3>
           <p class="description">Select the platforms you want to track:</p>
 
-          <div class="platforms">
-            <For each={popularPlatforms}>
-              {(platform) => (
-                <button
-                  class={`platform-button ${selectedPlatforms().some((p) => p.url === platform.url) ? "selected" : ""}`}
-                  onClick={() => togglePlatform(platform)}
-                  aria-pressed={selectedPlatforms().some((p) => p.url === platform.url)}
-                >
-                  <div class="platform-icon-wrapper">
-                    <img src={platform.img || "/placeholder.svg"} alt={`${platform.name} logo`} class="platform-icon" />
-                  </div>
-                  <span class="platform-button-text">{platform.name}</span>
-                </button>
-              )}
-            </For>
-          </div>
+          <PlatformList 
+            platforms={popularPlatforms}
+            isSelected={(platform: Platform) => selectedPlatforms().some((p) => p.url == platform)}
+            onSelect={togglePlatform}
+          />
         </div>
 
         <div class="section left-section">
@@ -239,14 +223,14 @@ export function WelcomePage({ onComplete }) {
                             onClick={() => handleEdit(index())}
                             aria-label={`Edit ${platform.name}`}
                           >
-                            <img src={editIcon || "/placeholder.svg"} alt="Edit" class="action-icon" />
+                            <FontAwesomeIcon icon={faEdit} alt="Edit" class="action-icon" />
                           </button>
                           <button
                             class="icon-button delete-button"
                             onClick={() => deletePlatform(index())}
                             aria-label={`Delete ${platform.name}`}
                           >
-                            <img src={deleteIcon || "/placeholder.svg"} alt="Delete" class="action-icon" />
+                            <FontAwesomeIcon icon={faDeleteLeft} alt="Delete" class="action-icon" />
                           </button>
                         </div>
                       </Show>
@@ -269,7 +253,7 @@ export function WelcomePage({ onComplete }) {
                   aria-label="Custom URL"
                 />
                 <button class="add-button" onClick={addCustomUrl} aria-label="Add custom URL">
-                  <img src={plusIcon || "/placeholder.svg"} alt="Add" class="plus-icon" />
+                  <FontAwesomeIcon icon={faPlus} alt="Add" class="plus-icon" />
                 </button>
               </div>
               <Show when={error()}>

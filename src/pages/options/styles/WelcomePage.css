@@ -1,57 +1,5 @@
-/* Base styles */
-html,
-body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
 
-.welcome-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100%;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  overflow: hidden;
-  position: relative;
-}
 
-/* Header styles */
-.welcome-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-  border-bottom: 1px solid rgba(156, 108, 174, 0.2);
-  animation: slideDown 0.5s ease-out;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--text-color);
-  margin: 0;
-  position: relative;
-  animation: fadeIn 0.8s ease-out;
-}
-
-.title::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background-color: var(--fg-color);
-  border-radius: 2px;
-  animation: growWidth 0.8s ease-out forwards;
-}
-
-.theme-switch-wrapper {
-  animation: fadeIn 0.8s ease-out;
-}
 
 /* Content layout */
 .content {
@@ -80,12 +28,7 @@ body {
   transform: translateY(-2px);
 }
 
-.section-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 10px 0;
-  color: var(--fg-color);
-}
+
 
 .description {
   font-size: 14px;
@@ -119,53 +62,7 @@ body {
   border-radius: 10px;
 }
 
-.platform-button {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  text-align: left;
-  color: var(--text-color);
-}
 
-.platform-button:hover {
-  background-color: rgba(156, 108, 174, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.platform-button.selected {
-  border-color: var(--fg-color);
-  background-color: rgba(156, 108, 174, 0.15);
-}
-
-.platform-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-  border-radius: 50%;
-  background-color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.platform-button:hover .platform-icon-wrapper {
-  transform: scale(1.1);
-}
-
-.platform-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
 
 .platform-button-text {
   font-size: 14px;
@@ -242,6 +139,22 @@ body {
   display: flex;
   align-items: center;
   flex: 1;
+}
+
+.shake-animation {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.pulse-animation {
+  animation: sizePulse 0.6s ease-out;
+}
+
+
+.footer {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  animation: slideUp 0.5s ease-out;
 }
 
 .platform-name {
@@ -414,125 +327,8 @@ body {
 }
 
 /* Footer */
-.footer {
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  animation: slideUp 0.5s ease-out;
-}
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes growWidth {
-  from {
-    width: 0;
-  }
-  to {
-    width: 40px;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes highlight {
-  0% {
-    background-color: rgba(156, 108, 174, 0.4);
-  }
-  100% {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-}
-
-.shake-animation {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-@keyframes shake {
-  10%,
-  90% {
-    transform: translateX(-1px);
-  }
-  20%,
-  80% {
-    transform: translateX(2px);
-  }
-  30%,
-  50%,
-  70% {
-    transform: translateX(-3px);
-  }
-  40%,
-  60% {
-    transform: translateX(3px);
-  }
-}
-
-.pulse-animation {
-  animation: buttonPulse 0.6s ease-out;
-}
-
-@keyframes buttonPulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
