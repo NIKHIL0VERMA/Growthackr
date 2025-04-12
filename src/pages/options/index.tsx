@@ -8,6 +8,7 @@ import { colorLog, LogTypes } from '@src/shared/utils/logger'
 import { PlatformManager } from '@src/pages/options/components/PlatformManager'
 import { MessageAction } from '@src/shared/types/messages'
 import { Platform } from '@src/pages/background/types/storage'
+import "@src/shared/utils/IconSetup"
 
 // Default settings - to be moved to a settings configuration in the future
 const DEFAULT_SETTINGS = {

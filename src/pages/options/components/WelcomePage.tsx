@@ -6,19 +6,8 @@ import GetStartedButton from "@src/components/common/GetStartedButton"
 import "@pages/options/styles/WelcomePage.css"
 import {extractHostName, isValidPage, removeTLD, validateUrl} from "@src/shared/utils/utilities"
 import { PlatformList } from "./PlatformsList"
-import { faFacebook, faYoutube, faInstagram, faXTwitter, faTiktok, faSnapchat } from "@fortawesome/free-brands-svg-icons"
 import { Platform } from "@src/pages/background/types/storage"
-import { faDeleteLeft, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
-const popularPlatforms : Platform[] = [
-  { name: "Facebook", url: "facebook.com", icon: faFacebook, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
-  { name: "YouTube", url: "youtube.com", icon: faYoutube, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
-  { name: "Instagram", url: "instagram.com", icon: faInstagram, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
-  { name: "X", url: "x.com", icon: faXTwitter, timeLimit: {hours : 0, minutes: 0.1}, isCustom: false },
-  { name: "TikTok", url: "tiktok.com", timeLimit: {hours : 0, minutes: 0.1}, icon: faTiktok, isCustom: false},
-  { name: "Snapchat", url: "snapchat.com", timeLimit: {hours : 0, minutes: 0.1}, icon: faSnapchat, isCustom: false },
-]
+import { popularPlatforms } from "@src/shared/constants/PopularPlatforms"
 
 export function WelcomePage({ onComplete }) {
   const [selectedPlatforms, setSelectedPlatforms] = createSignal([])
@@ -223,14 +212,14 @@ export function WelcomePage({ onComplete }) {
                             onClick={() => handleEdit(index())}
                             aria-label={`Edit ${platform.name}`}
                           >
-                            <FontAwesomeIcon icon={faEdit} alt="Edit" class="action-icon" />
+                            <i class="fas fa-edit"></i>
                           </button>
                           <button
                             class="icon-button delete-button"
                             onClick={() => deletePlatform(index())}
                             aria-label={`Delete ${platform.name}`}
                           >
-                            <FontAwesomeIcon icon={faDeleteLeft} alt="Delete" class="action-icon" />
+                            <i class="fas fa-trash"></i>
                           </button>
                         </div>
                       </Show>
@@ -253,7 +242,7 @@ export function WelcomePage({ onComplete }) {
                   aria-label="Custom URL"
                 />
                 <button class="add-button" onClick={addCustomUrl} aria-label="Add custom URL">
-                  <FontAwesomeIcon icon={faPlus} alt="Add" class="plus-icon" />
+                  <i class="fas fa-plus"></i>                
                 </button>
               </div>
               <Show when={error()}>

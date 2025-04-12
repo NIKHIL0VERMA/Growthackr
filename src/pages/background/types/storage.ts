@@ -8,7 +8,7 @@ export interface TimeSpentData {
 export interface Platform {
   url: string;
   name: string;
-  icon: IconProp | null;
+  icon: string;
   timeLimit: {
     hours: number;
     minutes: number;

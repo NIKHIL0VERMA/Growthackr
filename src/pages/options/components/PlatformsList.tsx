@@ -1,7 +1,5 @@
 import { For } from "solid-js";
 import { Platform } from "@src/pages/background/types/storage";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 
 export interface PlatformListProps {
     platforms: Platform[],
@@ -11,7 +9,7 @@ export interface PlatformListProps {
 
 export const PlatformList = (props : PlatformListProps) => {
     return (
-        <div class="platforms">
+        <div class="platforms-list">
             <For each={props.platforms}>
                 {(platform) => (
                     <button
@@ -20,7 +18,7 @@ export const PlatformList = (props : PlatformListProps) => {
                         aria-pressed={props.isSelected(platform)}
                     >
                         <div class="platform-icon-wrapper">
-                            <FontAwesomeIcon icon = {platform.icon || faGlobe} class="platform-icon" />
+                            <i class={`${platform.isCustom ? "fas fa-globe" : "fab " + platform.icon} platform-icon`} />
                         </div>
                         <span class="platform-button-text">{platform.name}</span>
                     </button>

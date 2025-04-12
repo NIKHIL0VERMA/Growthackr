@@ -1,4 +1,4 @@
-import { createSignal, Suspense, createResource} from "solid-js"
+import { createSignal, createResource} from "solid-js"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import "@pages/options/styles/platformManager.css"
 
@@ -7,7 +7,6 @@ import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { PlatformList } from "./PlatformsList";
 import { Platform } from "@src/pages/background/types/storage";
 import { UpdatePlatformMessage } from "@src/shared/types/messages";
-
 
 export function PlatformManager() {
   const [selectedPlatform, setSelectedPlatform] = createSignal(null)
