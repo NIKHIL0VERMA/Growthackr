@@ -1,10 +1,8 @@
 import { ExtensionMessage, MessageAction, MessageResponse, AddPlatformMessage, UpdatePlatformMessage, SetPlatformsMessage } from '@src/shared/types/messages';
 import { updateStorage, getStorageData, addPlatform, updatePlatform, clearStorage, setPlatforms } from '../services/storage';
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
-import { Platform } from '../types/storage';
-import { platform } from 'os';
 
-/**
+/** 
  * Handles incoming messages from other parts of the extension
  * @param message - The message to handle
  * @returns Promise resolving to the response

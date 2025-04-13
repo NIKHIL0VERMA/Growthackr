@@ -6,7 +6,7 @@ import manifest from "./src/manifest";
 
 const root = resolve(__dirname, "src");
 const pagesDir = resolve(root, "pages");
-const assetsDir = resolve(root, "assets");
+const stylesDir = resolve(root, "styles");
 const outDir = resolve(__dirname, "dist");
 const publicDir = resolve(__dirname, "public");
 const utilsDir = resolve(__dirname, "utils");
@@ -18,7 +18,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@src": root,
-      "@assets": assetsDir,
+      "@styles": stylesDir,
       "@pages": pagesDir,
       "@utils": utilsDir,
     },

@@ -1,11 +1,8 @@
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
-import { updateStorage, getStorageData } from './services/storage';
-import { TrackingService } from './services/tracking';
+import { updateStorage } from './services/storage';
+import { initializeTracking } from './services/tracking';
 import { handleMessage } from './listeners/message';
 import { ExtensionMessage } from '@src/shared/types/messages';
-
-// Initialize services
-const trackingService = TrackingService.getInstance();
 
 // Logger for background script
 colorLog("Starting background script", LogTypes.INFO);
@@ -49,8 +46,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 // Initialize services
 async function initializeServices() {
   try {
-    await getStorageData(); // Initialize storage
-    await trackingService.initialize();
+    await initializeTracking();
     colorLog("All services initialized successfully", LogTypes.SUCCESS);
   } catch (error) {
     colorLog(`Failed to initialize services: ${error}`, LogTypes.ERROR);

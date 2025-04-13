@@ -27,8 +27,8 @@
       "@src/*": [
         "src/*"
       ],
-      "@assets/*": [
-        "src/assets/*"
+      "@styles/*": [
+        "src/styles/*"
       ],
       "@pages/*": [
         "src/pages/*"

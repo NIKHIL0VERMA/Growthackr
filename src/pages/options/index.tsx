@@ -1,7 +1,6 @@
 import { createSignal, createEffect, onMount } from 'solid-js'
 import { render } from 'solid-js/web'
-import "@assets/styles/global.css"
-import "@pages/options/styles/option.css"
+import "@styles/global.css"
 import { ThemeProvider, useTheme } from '@src/components/common/ThemeProvider'
 import { WelcomePage } from '@src/pages/options/components/WelcomePage'
 import { colorLog, LogTypes } from '@src/shared/utils/logger'
@@ -9,38 +8,22 @@ import { PlatformManager } from '@src/pages/options/components/PlatformManager'
 import { MessageAction } from '@src/shared/types/messages'
 import { Platform } from '@src/pages/background/types/storage'
 import "@src/shared/utils/IconSetup"
-
-// Default settings - to be moved to a settings configuration in the future
-const DEFAULT_SETTINGS = {
-  timeLimit: {
-    hours: 0,
-    minutes: 15
-  }
-};
+import "./index.css"
 
 const OptionsContent = () => {
   const [welcomeShown, setwelcomeShown] = createSignal(false);
   const { isDarkMode } = useTheme();
 
-  const handleWelcomeComplete = async (platformList) => {
+  const handleWelcomeComplete = async (platformList : Platform[]) => {
     try {
-      // Create complete platform objects with default settings
-      const platforms: Platform[] = platformList.map(platform => ({
-        url: platform.url,
-        name: platform.name,
-        icon: platform.img || '',
-        timeLimit: DEFAULT_SETTINGS.timeLimit,
-        isCustom: !platform.img // If no image, it's a custom platform
-      }));
-
       // Send all platforms in a single message
       const platformResponse = await chrome.runtime.sendMessage({
         action: MessageAction.SET_PLATFORMS,
-        platforms // Send the entire list at once
+        platforms: platformList
       });
 
       if (platformResponse.success) {
-        colorLog(`Successfully added ${platforms.length} platforms`, LogTypes.SUCCESS);
+        colorLog(`Successfully added ${platformList.length} platforms`, LogTypes.SUCCESS);
       }
 
       // Mark welcome as completed

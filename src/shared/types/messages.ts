@@ -1,4 +1,4 @@
-import { Platform } from "../../pages/background/types/storage";
+import { Platform } from "@pages/background/types/storage";
 
 /**
  * Enum representing all possible message actions in the extension
@@ -13,7 +13,8 @@ export enum MessageAction {
   SET_PLATFORMS = 'setPlatforms',
   ADD_PLATFORM = 'addPlatform',
   UPDATE_PLATFORM = 'updatePlatform',
-  CLEAR_STORAGE = 'clear'
+  CLEAR_STORAGE = 'clear',
+  SYNC_THEME = 'syncTheme',
 }
 
 /**
@@ -95,6 +96,14 @@ export interface ClearStorageMessage extends BaseMessage {
 }
 
 /**
+ * Message to sync the theme between tabs
+ */
+export interface SyncThemeMessage extends BaseMessage {
+  action: MessageAction.SYNC_THEME;
+  theme: 'light' | 'dark';
+}
+
+/**
  * Union type representing all possible messages in the extension
  */
 export type ExtensionMessage = 
@@ -106,7 +115,8 @@ export type ExtensionMessage =
   | SetPlatformsMessage
   | AddPlatformMessage
   | UpdatePlatformMessage
-  | ClearStorageMessage;
+  | ClearStorageMessage
+  | SyncThemeMessage;
 
 /**
  * Generic success response interface

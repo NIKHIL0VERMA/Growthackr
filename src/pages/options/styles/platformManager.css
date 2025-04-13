@@ -1,264 +1,227 @@
+/**
+ * Styles for the Platform Manager page
+ * Defines layout, animations, and responsive behavior
+ */
 
-  
-  /* Platform list container */
-  .platforms-container {
-    width: 400px;
-    max-height: 80vh;
-    background-color: var(--bg-color);
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    padding: 24px;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    position: relative; /* Changed from absolute to relative */
-    z-index: 2;
-  }
-  
-  /* When in expanded state, position the containers side by side */
-  .platforms-container.expanded {
-    transform: translateX(0); /* Don't move it, just keep it in place */
-    margin-right: 20px; /* Add margin for spacing */
-    flex: 0 0 45%; /* Take up 45% of the container */
-    max-width: 400px;
-  }
-  
-  .platforms-container.animating-out {
-    transform: translateX(0); /* Keep in place */
-  }
-  
-  
-  .platforms-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-height: calc(60vh - 100px);
-    overflow-y: auto;
-    padding-right: 8px;
-    /* Custom scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: var(--fg-color) var(--bg-color);
-  }
-  
-  .platforms-list::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .platforms-list::-webkit-scrollbar-track {
-    background: var(--bg-color);
-    border-radius: 10px;
-  }
-  
-  .platforms-list::-webkit-scrollbar-thumb {
-    background: var(--fg-color);
-    border-radius: 10px;
-  }
-  
-  .platforms-list::-webkit-scrollbar-thumb:hover {
-    background: var(--fg-color);
-    opacity: 0.8;
-  }
-  
-  
-  .platform-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-color);
-  }
-  
-  /* Time limit container */
-  .time-limit-container {
-    width: 400px;
-    background-color: var(--bg-color);
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    padding: 24px;
-    position: relative; /* Changed from absolute to relative */
-    opacity: 0;
-    display: none; /* Hide initially */
-    transition: opacity 0.3s ease-in-out;
-    z-index: 1;
-    flex: 0 0 45%; /* Take up 45% of the container */
-    max-width: 400px;
-  }
-  
-  .time-limit-container.expanded {
+
+
+
+
+
+.app-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--border-radius);
+}
+
+
+
+
+
+
+
+/* Platform manager layout */
+.platform-manager-layout {
+  display: flex;
+  gap: var(--spacing-xl);
+  height: 100%;
+  width: 100%;
+  max-width: 900px;
+  align-items: flex-start;
+}
+
+.platform-selection-panel {
+  flex: 1;
+  max-width: 400px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  padding: var(--spacing-lg);
+  height: fit-content;
+  animation: fadeIn 0.5s ease-out, slideIn 0.5s ease-out;
+}
+
+.time-limit-panel {
+  flex: 1;
+  max-width: 400px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--card-shadow);
+  padding: var(--spacing-lg);
+  height: fit-content;
+  animation: fadeIn 0.3s ease-in-out, slideIn 0.3s ease-in-out;
+}
+
+.input-card {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.platform-title {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-color);
+  text-align: center;
+  font-weight: 500;
+}
+
+.time-inputs {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.time-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.time-input-group label {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.time-input {
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.time-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(156, 108, 174, 0.2);
+  outline: none;
+}
+
+.button-group {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.action-button {
+  flex: 1;
+  padding: var(--spacing-md) 0;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-button {
+  background-color: var(--primary-color);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.save-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.save-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(156, 108, 174, 0.3);
+}
+
+.save-button:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+.save-button.save-success {
+  background-color: var(--success-color);
+}
+
+.cancel-button {
+  background-color: rgba(156, 108, 174, 0.1);
+  color: var(--text-color);
+}
+
+.cancel-button:hover {
+  background-color: rgba(156, 108, 174, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+/* Confirmation toast */
+.confirmation-toast {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--success-color);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
+  z-index: 1000;
+}
+
+.confirmation-toast i {
+  font-size: var(--font-size-md);
+}
+
+@keyframes fadeOut {
+  from {
     opacity: 1;
-    display: block; /* Show when expanded */
   }
-  
-  .time-limit-container.animating-out {
+  to {
     opacity: 0;
   }
-  
-  .input-card {
-    animation: fadeIn 0.3s ease-in-out;
+}
+
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
   }
-  
-  .platform-title {
-    font-size: 18px;
-    margin-bottom: 24px;
-    color: var(--fg-color);
-    text-align: center;
-    font-weight: 500;
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.5;
   }
-  
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .platform-manager-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .platform-selection-panel,
+  .time-limit-panel {
+    max-width: 100%;
+    width: 100%;
+  }
+
   .time-inputs {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  
-  .time-input-group {
-    flex: 1;
-    display: flex;
     flex-direction: column;
   }
-  
-  .time-input-group label {
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: var(--text-color);
-    opacity: 0.8;
-  }
-  
-  .time-input {
-    padding: 12px;
-    border: 2px solid var(--fg-color);
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .time-input:focus {
-    border-color: var(--fg-color);
-    box-shadow: 0 0 0 3px rgba(156, 108, 174, 0.2);
-    outline: none;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 12px;
-  }
-  
-  .action-button {
-    flex: 1;
-    padding: 12px 0;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .save-button {
-    background-color: var(--fg-color);
-    color: var(--text-color);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .save-button::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%);
-    transform-origin: 50% 50%;
-  }
-  
-  .save-button:hover {
-    background-color: var(--fg-color);
-    opacity: 0.9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(156, 108, 174, 0.3);
-  }
-  
-  .save-button:active::after {
-    animation: ripple 0.6s ease-out;
-  }
-  
-  .save-button.save-success {
-    background-color: #4caf50;
-  }
-  
-  .cancel-button {
-    background-color: rgba(156, 108, 174, 0.1);
-    color: var(--text-color);
-  }
-  
-  .cancel-button:hover {
-    background-color: rgba(156, 108, 174, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes ripple {
-    0% {
-      transform: scale(0, 0);
-      opacity: 0.5;
-    }
-    20% {
-      transform: scale(25, 25);
-      opacity: 0.5;
-    }
-    100% {
-      opacity: 0;
-      transform: scale(40, 40);
-    }
-  }
-  
-  /* Dark mode support - using the body.dark class */
-  body.dark .platforms-container,
-  body.dark .time-limit-container {
-    background-color: #3a3a3a;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 900px) {
-    .content-container {
-      flex-direction: column;
-      gap: 20px;
-    }
-  
-    .platforms-container,
-    .time-limit-container {
-      width: 90%;
-      max-width: 400px;
-    }
-  
-    .platforms-container.expanded {
-      margin-right: 0;
-      margin-bottom: 20px;
-      flex: none;
-    }
-  
-    .time-limit-container.expanded {
-      flex: none;
-    }
-  
-    .time-inputs {
-      flex-direction: column;
-    }
-  }
-  
-  
+}

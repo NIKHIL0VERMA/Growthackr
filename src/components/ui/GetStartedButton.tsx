@@ -1,5 +1,5 @@
 import { createSignal, JSX } from "solid-js";
-import '@assets/styles/GetStartedButton.css';
+import '@styles/GetStartedButton.css';
 
 const GetStartedButton = (props) => {
   const [isHovered, setIsHovered] = createSignal(false);
