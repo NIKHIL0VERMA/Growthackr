@@ -1,4 +1,3 @@
-import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 export interface TimeSpentData {
   [date: string]: {
     [domain: string]: number;

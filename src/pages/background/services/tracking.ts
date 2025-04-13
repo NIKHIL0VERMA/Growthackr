@@ -2,7 +2,6 @@ import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "../../blocking";
 import { getStorageData, setTimeSpent } from "./storage";
-import { Platform } from "../types/storage";
 
 /**
  * Error thrown when tracking operations fail
@@ -118,8 +117,10 @@ export class TrackingService {
         const data = await getStorageData();
         const platforms = data.platforms || [];
         const platform = platforms.find(p => p.url === this.currentDomain);
-
-        if (platform) {
+        if(!platform){
+          clearInterval(this.trackingInterval);
+          colorLog("Preventing tracking on invalid url", LogTypes.INFO);
+        }else{
           const today = new Date().toISOString().split('T')[0];
           const timeSpent = data.timeSpent || {};
           const domainTime = timeSpent[today] || {};
@@ -127,8 +128,6 @@ export class TrackingService {
 
           domainTime[this.currentDomain] = currentTime + 1;
           timeSpent[today] = domainTime;
-
-          await setTimeSpent(timeSpent);
 
           // Check if time limit exceeded
           const totalMinutes = Math.floor(currentTime / 60);
