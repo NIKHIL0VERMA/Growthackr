@@ -77,16 +77,16 @@ const handleCloseOptionsPage = async (): Promise<MessageResponse> => {
  * Handles get time spent message
  */
 const handleGetTimeSpent = async (): Promise<MessageResponse> => {
-  const data = await getStorageData();
-  return { success: true, data: data.timeSpent };
+  const {timeSpent} = await getStorageData(['timeSpent']);
+  return { success: true, data: timeSpent };
 };
 
 /**
  * Handles get platforms message
  */
 const handleGetPlatforms = async (): Promise<MessageResponse> => {
-  const data = await getStorageData();
-  return { success: true, data: data.platforms };
+  const {platforms} = await getStorageData(['platforms']);
+  return { success: true, data: platforms };
 };
 
 const handleSetPlatforms = async (message : SetPlatformsMessage): Promise<MessageResponse> => {

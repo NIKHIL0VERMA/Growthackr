@@ -44,9 +44,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 });
 
 // Initialize services
-async function initializeServices() {
+function initializeServices() {
   try {
-    await initializeTracking();
+    initializeTracking();
     colorLog("All services initialized successfully", LogTypes.SUCCESS);
   } catch (error) {
     colorLog(`Failed to initialize services: ${error}`, LogTypes.ERROR);

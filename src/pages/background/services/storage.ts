@@ -10,24 +10,45 @@ export class StorageError extends Error {
     this.name = 'StorageError';
   }
 }
+/**
+ * Type representing the keys of the StorageData
+ */
+type StorageKey = keyof StorageData;
 
 /**
- * Gets the current storage data
+ * Asynchronous function to get the current storage data
+ * @param keys - Optional array of keys to get from the storage
  * @returns Promise resolving to the current storage data
  * @throws {StorageError} If storage access fails
  */
-export const getStorageData = async (): Promise<StorageData> => {
+export const getStorageData = async <T extends StorageKey>(
+  keys?: T[]
+): Promise<Pick<StorageData, T> | StorageData> => {
   try {
     return new Promise((resolve, reject) => {
-      chrome.storage.local.get(['timeSpent', 'platforms'], (result) => {
+      const storageKeys = keys ?? ['timeSpent', 'platforms'];
+      chrome.storage.local.get(storageKeys, (result) => {
         if (chrome.runtime.lastError) {
           reject(new StorageError(chrome.runtime.lastError.message));
           return;
         }
-        resolve({
-          timeSpent: result.timeSpent || {},
-          platforms: result.platforms || []
-        });
+
+        const defaultValues: Partial<StorageData> = {
+          timeSpent: {},
+          platforms: [],
+        };
+
+        const data = keys
+          ? (keys.reduce((acc, key) => {
+              acc[key] = result[key] ?? defaultValues[key];
+              return acc;
+            }, {} as any) as Pick<StorageData, T>)
+          : ({
+              timeSpent: result.timeSpent ?? {},
+              platforms: result.platforms ?? [],
+            } as StorageData);
+
+        resolve(data);
       });
     });
   } catch (error) {
@@ -84,9 +105,7 @@ export const setPlatforms = async (platforms: Platform[]): Promise<void> => {
  * @throws {StorageError} If update fails
  */
 export const addPlatform = async (platform: Platform): Promise<void> => {
-  const data = await getStorageData();
-  const platforms = data.platforms || [];
-
+  const {platforms} = await getStorageData(['platforms']);
   const isPlatformExist = platforms.some(p => p.url === platform.url);
   if(!isPlatformExist){
     platforms.push(platform);
@@ -100,8 +119,7 @@ export const addPlatform = async (platform: Platform): Promise<void> => {
  * @throws {StorageError} If platform not found or update fails
  */
 export const updatePlatform = async (platform: Platform): Promise<void> => {
-  const data = await getStorageData();
-  const platforms = data.platforms || [];
+  const {platforms} = await getStorageData(['platforms']);
   const index = platforms.findIndex(p => p.url === platform.url);
   
   if (index === -1) {

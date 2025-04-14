@@ -2,13 +2,12 @@ import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "@pages/blocking";
 import { getStorageData, setTimeSpent } from "./storage";
-import type { Platform } from "../types/storage"; 
 
 let currentDomain: string | null = null;
 let trackingInterval: ReturnType<typeof setInterval> | null = null;
 let saveInterval: ReturnType<typeof setInterval> | null = null;
 
-export const initializeTracking = async (): Promise<void> => {
+export const initializeTracking =  () => {
   try {
     registerListeners();
     colorLog("Tracking initialized", LogTypes.SUCCESS);
@@ -23,8 +22,6 @@ const registerListeners = (): void => {
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete" && tab.active && isValidPage(tab)) {
       handleTab(tab);
-    }else{
-      stopTracking();
     }
   });
 };
@@ -33,7 +30,6 @@ const onTabActivated = async (activeInfo: chrome.tabs.TabActiveInfo): Promise<vo
   try {
     const tab = await chrome.tabs.get(activeInfo.tabId);
     if (isValidPage(tab)) handleTab(tab);
-    else stopTracking();
   } catch (error) {
     colorLog(`Tab activation error: ${error}`, LogTypes.ERROR);
   }
@@ -44,7 +40,6 @@ const onFocusChanged = async (windowId: number): Promise<void> => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, windowId });
     if (isValidPage(tab)) handleTab(tab);
-    else stopTracking();
   } catch (error) {
     colorLog(`Window focus error: ${error}`, LogTypes.ERROR);
   }
@@ -63,8 +58,7 @@ const startTimeTracking = (): void => {
     if (!currentDomain) return;
 
     try {
-      const data = await getStorageData();
-      const platforms: Platform[] = data.platforms || [];
+      const {platforms, timeSpent} = await getStorageData();
       const platform = platforms.find(p => p.url === currentDomain);
 
       if (!platform) {
@@ -74,7 +68,6 @@ const startTimeTracking = (): void => {
       }
 
       const today = new Date().toISOString().split('T')[0];
-      const timeSpent = data.timeSpent ?? {};
       const domainTime = timeSpent[today] ?? {};
       const currentTime = domainTime[currentDomain] ?? 0;
 

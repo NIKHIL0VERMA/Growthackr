@@ -27,7 +27,7 @@ export function PlatformManager() {
       })
       return stored_platforms.data
     } catch (error) {
-      console.error("Error fetching platforms:", error)
+      colorLog("Error fetching platforms:" + error, LogTypes.ERROR);
       return []
     }
   })
@@ -73,7 +73,7 @@ export function PlatformManager() {
         setTimeout(() => setShowConfirmation(false), 3000)
       }
     } catch (error) {
-      console.error("Error saving settings:", error)
+      colorLog("Error saving settings:" + error, LogTypes.ERROR);
       setConfirmationMessage("An error occurred. Please try again.")
       setShowConfirmation(true)
       setTimeout(() => setShowConfirmation(false), 3000)
