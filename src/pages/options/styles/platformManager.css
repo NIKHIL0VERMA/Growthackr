@@ -14,12 +14,6 @@
   border-radius: var(--border-radius);
 }
 
-
-
-
-
-
-
 /* Platform manager layout */
 .platform-manager-layout {
   display: flex;
@@ -27,7 +21,7 @@
   height: 100%;
   width: 100%;
   max-width: 900px;
-  align-items: flex-start;
+  justify-content: center;
 }
 
 .platform-selection-panel {

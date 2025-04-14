@@ -112,7 +112,7 @@ export function PlatformManager() {
         </div>
       </header>
 
-      <div class="content-container">
+      <div class="content-container" style={'align-items: center'}>
         <div class="platform-manager-layout">
           <div class="platform-selection-panel">
             <h2 class="section-title">Select Platforms</h2>
@@ -124,7 +124,7 @@ export function PlatformManager() {
               onSelect={handlePlatformSelect}
               showTimeLimit={true}
               loading={platforms.loading}
-              maxHeight="calc(100vh - 250px)"
+              maxHeight="calc(70vh - 250px)"
               emptyMessage="No platforms configured. Add platforms in the welcome page."
             />
           </div>

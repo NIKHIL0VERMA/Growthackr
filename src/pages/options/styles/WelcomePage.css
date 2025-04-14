@@ -288,7 +288,6 @@
 .input-group {
   display: flex;
   position: relative;
-  margin-bottom: 5px;
 }
 
 .url-input {
@@ -310,8 +309,6 @@
 .add-button {
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -455,7 +452,6 @@
 
 /* Footer */
 .welcome-footer {
-  padding: var(--spacing-lg);
   display: flex;
   justify-content: center;
   gap: var(--spacing-lg);
@@ -530,7 +526,6 @@
   .welcome-footer {
     flex-direction: column;
     gap: var(--spacing-sm);
-    padding: var(--spacing-md);
   }
 
   .next-button,

@@ -1,0 +1,20 @@
+{
+  "entryPoints": [
+    "src",
+    "test-utils",
+    "utils"
+  ],
+  "out": "docs",
+
+  "tsconfig": "tsconfig.json",
+
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "name": "Growthackr Chrome Extension",
+  "theme": "default",
+  "hideGenerator": true,
+
+  "skipErrorChecking": true
+}

@@ -174,7 +174,7 @@ export function WelcomePage({ onComplete }) {
                 platforms={popularPlatforms}
                 isSelected={(platform) => selectedPlatforms().some((p) => p.url === platform.url)}
                 onSelect={togglePlatform}
-                maxHeight="calc(100vh - 250px)"
+                maxHeight="calc(70vh - 250px)"
                 />
 
               <div class="custom-url-section">
@@ -203,7 +203,7 @@ export function WelcomePage({ onComplete }) {
 
             <div class="section selection-section">
               <h3 class="section-title">Your Selection</h3>
-              <p class="description">Selected platforms:</p>
+              <p class="section-description">Selected platforms:</p>
 
               <div class="selected-container">
                 <Show
@@ -284,7 +284,7 @@ export function WelcomePage({ onComplete }) {
           <Show when={step() === 2}>
             <div class="section goals-section">
               <h3 class="section-title">Set Your Goals</h3>
-              <p class="description">Define how much time you want to spend on each platform daily:</p>
+              <p class="section-description">Define how much time you want to spend on each platform daily:</p>
 
               <div class="goals-list">
                 <For each={selectedPlatforms()}>

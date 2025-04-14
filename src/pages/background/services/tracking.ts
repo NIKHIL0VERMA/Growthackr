@@ -1,4 +1,3 @@
-// trackingService.ts
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "@pages/blocking";
@@ -115,6 +114,7 @@ const startSaveInterval = (): void => {
 };
 
 const stopTracking = (): void => {
+  colorLog("Stopping tracker!! Site shouldn't be tracked", LogTypes.INFO);
   if (trackingInterval) {
     clearInterval(trackingInterval);
     trackingInterval = null;
