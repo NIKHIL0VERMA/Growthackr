@@ -5,19 +5,19 @@
  * @returns {boolean} - True if the tab is valid, false otherwise.
  */
 export const isValidPage = (tab: chrome.tabs.Tab | undefined): boolean => {
-    if (!tab || !tab.url || !tab.id) return false;
+  if (!tab || !tab.url || !tab.id) return false;
   
-    if (
-      (!tab.url.startsWith('http:') &&
+  if (
+    (!tab.url.startsWith('http:') &&
         !tab.url.startsWith('https:') &&
         !tab.url.startsWith('file:')) ||
       tab.url.startsWith('chrome://') ||
       tab.url.startsWith('chrome-extension://') ||
       tab.url.startsWith('brave://')
-    )
-      return false;
-    return true;
-  };
+  )
+    return false;
+  return true;
+};
 
 /**
  * Extracts the hostname from a given URL.
@@ -27,22 +27,22 @@ export const isValidPage = (tab: chrome.tabs.Tab | undefined): boolean => {
  * @returns {string} - The extracted hostname.
  */
 export const extractHostName = (url: string | undefined): string => {
-    if (!url) return '';
+  if (!url) return '';
   
-    if (url.startsWith('file:')) {
-      return url;
-    }
+  if (url.startsWith('file:')) {
+    return url;
+  }
   
-    let hostname = url.indexOf('//') > -1 ? url.split('/')[2] : url.split('/')[0];
-    hostname = hostname.split(':')[0];
-    hostname = hostname.split('?')[0];
+  let hostname = url.indexOf('//') > -1 ? url.split('/')[2] : url.split('/')[0];
+  hostname = hostname.split(':')[0];
+  hostname = hostname.split('?')[0];
   
-    if (hostname.startsWith('www.')) {
-      hostname = hostname.substring(4);
-    }
+  if (hostname.startsWith('www.')) {
+    hostname = hostname.substring(4);
+  }
       
-    return hostname;
-  };
+  return hostname;
+};
   
 /**
  * Removes the top-level domain (TLD) from a given hostname.
@@ -51,16 +51,16 @@ export const extractHostName = (url: string | undefined): string => {
  * @returns {string} - The hostname with the TLD removed.
  */
 export const removeTLD = (hostname: string | undefined): string => {
-    if (!hostname) return '';
-    const parts = hostname.split('.');
-    if (parts.length > 1) {
-      parts.pop();
-    }
-    const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase());
-    return capitalizedParts.join('.');
-  };
+  if (!hostname) return '';
+  const parts = hostname.split('.');
+  if (parts.length > 1) {
+    parts.pop();
+  }
+  const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase());
+  return capitalizedParts.join('.');
+};
 
-  /**
+/**
  * Validates if the provided URL is a valid web page URL (http or https).
  * 
  * @param {string} url - The URL to be validated.
@@ -72,27 +72,27 @@ export const validateUrl = (url: string | undefined): boolean => {
   let testUrl = url.trim();
 
   if (!testUrl.match(/^https?:\/\//i)) {
-      testUrl = "http://" + testUrl;
+    testUrl = "http://" + testUrl;
   }
 
   try {
-      const parsedUrl = new URL(testUrl);
-      const validProtocols = ['http:', 'https:'];
-      if (!validProtocols.includes(parsedUrl.protocol)) {
-          return false;
-      }
-
-      const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
-      if (!domainRegex.test(parsedUrl.hostname)) {
-          return false;
-      }
-
-      if (/[\s<>]/.test(testUrl)) {
-          return false;
-      }
-
-      return true;
-  } catch (_) {
+    const parsedUrl = new URL(testUrl);
+    const validProtocols = ['http:', 'https:'];
+    if (!validProtocols.includes(parsedUrl.protocol)) {
       return false;
+    }
+
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+    if (!domainRegex.test(parsedUrl.hostname)) {
+      return false;
+    }
+
+    if (/[\s<>]/.test(testUrl)) {
+      return false;
+    }
+
+    return true;
+  } catch (_) {
+    return false;
   }
 }

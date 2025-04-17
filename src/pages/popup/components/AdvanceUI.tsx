@@ -3,6 +3,7 @@ import { createSignal, createResource, For, Show } from "solid-js"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import { Button } from "@src/components/ui/Button"
 import { colorLog, LogTypes } from "@src/shared/utils/logger"
+import { MessageAction } from "@src/shared/types/messages"
 
 
 /**
@@ -15,7 +16,7 @@ export const AdvanceUI = () => {
     const [platforms] = createResource(async () => {
       try {
         const response = await chrome.runtime.sendMessage({
-          action: "GET_PLATFORMS", // TODO: update to usage platforms
+          action: MessageAction.GET_PLATFORMS,
         })
         return response.data || []
       } catch (error) {

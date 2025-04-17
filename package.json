@@ -10,7 +10,7 @@
     },
     "scripts": {
         "lint": "eslint . --fix -c .eslintrc --ext js,ts --ignore-pattern='!.*'",
-        "dev": "vite build -w --mode development",
+        "dev": "NODE_ENV=development vite build -w --mode development",
         "build": "NODE_ENV=production tsc --noEmit && vite build",
         "docs": "npx typedoc --entryPointStrategy expand",
         "test": "jest"

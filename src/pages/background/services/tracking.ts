@@ -2,13 +2,21 @@ import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "@pages/blocking";
 import { getStorageData, setTimeSpent } from "./storage";
+import { Platform, StorageData, TimeSpentData } from "../types/storage";
 
 let currentDomain: string | null = null;
 let trackingInterval: ReturnType<typeof setInterval> | null = null;
 let saveInterval: ReturnType<typeof setInterval> | null = null;
 
-export const initializeTracking =  () => {
+let platforms : Platform[] | null = null;
+let timeSpent : TimeSpentData | null = null;
+
+export const initializeTracking =  async () => {
   try {
+    let storageData: StorageData = await getStorageData();
+    platforms = storageData.platforms;
+    timeSpent = storageData.timeSpent;
+
     registerListeners();
     colorLog("Tracking initialized", LogTypes.SUCCESS);
   } catch (error) {
@@ -58,8 +66,7 @@ const startTimeTracking = (): void => {
     if (!currentDomain) return;
 
     try {
-      const {platforms, timeSpent} = await getStorageData();
-      const platform = platforms.find(p => p.url === currentDomain);
+      const platform = platforms.find(p => p.url.toLowerCase() === currentDomain.toLowerCase());
 
       if (!platform) {
         stopTracking();
@@ -67,7 +74,7 @@ const startTimeTracking = (): void => {
         return;
       }
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date().toLocaleDateString('en-CA');;
       const domainTime = timeSpent[today] ?? {};
       const currentTime = domainTime[currentDomain] ?? 0;
 
@@ -84,6 +91,7 @@ const startTimeTracking = (): void => {
             target: { tabId: tab.id },
             func: blockSite
           });
+          stopTracking();
         }
       }
     } catch (error) {
@@ -98,8 +106,7 @@ const startSaveInterval = (): void => {
   saveInterval = setInterval(async () => {
     try {
       if (!currentDomain) return;
-      const data = await getStorageData();
-      await setTimeSpent(data.timeSpent);
+      await setTimeSpent(timeSpent);
     } catch (error) {
       colorLog(`Save error: ${error}`, LogTypes.ERROR);
     }

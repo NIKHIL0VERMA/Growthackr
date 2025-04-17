@@ -6,6 +6,7 @@ import "@styles/global.css"
 import "@pages/popup/index.css"
 import { CircularProgress } from "./CircularProgress"
 import { colorLog, LogTypes } from "@src/shared/utils/logger"
+import { MessageAction } from "@src/shared/types/messages"
 
 /**
  * Main content component for the popup
@@ -20,7 +21,7 @@ export const UsageTracker = () => {
   const [platforms] = createResource(async () => {
     try {
       const response = await chrome.runtime.sendMessage({
-        action: "GET_PLATFORMS",
+        action: MessageAction.GET_PLATFORMS,
       })
       return response.data || []
     } catch (error) {
@@ -33,7 +34,7 @@ export const UsageTracker = () => {
   const [timeSpent] = createResource(async () => {
     try {
       const response = await chrome.runtime.sendMessage({
-        action: "GET_TIME_SPENT",
+        action: MessageAction.GET_TIME_SPENT,
       })
       return response.data || {}
     } catch (error) {

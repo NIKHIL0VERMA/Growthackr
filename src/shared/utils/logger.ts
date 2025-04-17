@@ -32,7 +32,7 @@ function print(logFn, style, ...args) {
       style,
       '',
       ...newArgs,
-      );
+    );
   } else {
     logFn('%cGrowthackr', style, ...args);
   }
@@ -46,28 +46,28 @@ export function log(cnsl, ...args) {
       ...args,
     );
 }
-enum LogTypes{SUCCESS, INFO, ERROR, WARNING};
+enum LogTypes{SUCCESS, INFO, ERROR, WARNING}
 
 function colorLog(message, type : LogTypes) {
   let color = COLORS.FgBlack;
   let cnsl = console.log;
 
   switch (type) {
-    case LogTypes.SUCCESS:
-      color = COLORS.FgGreen;
-      break;
-    case LogTypes.INFO:
-      cnsl = console.info;
-      color = COLORS.FgBlue;
-      break;
-    case LogTypes.ERROR:
-      cnsl = console.error;
-      color = COLORS.FgRed;
-      break;
-    case LogTypes.WARNING:
-      cnsl = console.warn;
-      color = COLORS.FgYellow;
-      break;
+  case LogTypes.SUCCESS:
+    color = COLORS.FgGreen;
+    break;
+  case LogTypes.INFO:
+    cnsl = console.info;
+    color = COLORS.FgBlue;
+    break;
+  case LogTypes.ERROR:
+    cnsl = console.error;
+    color = COLORS.FgRed;
+    break;
+  case LogTypes.WARNING:
+    cnsl = console.warn;
+    color = COLORS.FgYellow;
+    break;
   }
 
   log(cnsl, '\x20'+color+message);

@@ -40,13 +40,13 @@ export const getStorageData = async <T extends StorageKey>(
 
         const data = keys
           ? (keys.reduce((acc, key) => {
-              acc[key] = result[key] ?? defaultValues[key];
-              return acc;
-            }, {} as any) as Pick<StorageData, T>)
+            acc[key] = result[key] ?? defaultValues[key];
+            return acc;
+          }, {} as any) as Pick<StorageData, T>)
           : ({
-              timeSpent: result.timeSpent ?? {},
-              platforms: result.platforms ?? [],
-            } as StorageData);
+            timeSpent: result.timeSpent ?? {},
+            platforms: result.platforms ?? [],
+          } as StorageData);
 
         resolve(data);
       });

@@ -11,26 +11,28 @@ export const handleMessage = async (message: ExtensionMessage): Promise<MessageR
   try {
     const { action } = message;
     switch (action) {
-      case MessageAction.WELCOME_COMPLETED:
-        return handleWelcomeCompleted();
-      case MessageAction.CLOSE_TAB:
-        return handleCloseTab();
-      case MessageAction.CLOSE_OPTIONS_PAGE:
-        return handleCloseOptionsPage();
-      case MessageAction.GET_TIME_SPENT:
-        return handleGetTimeSpent();
-      case MessageAction.GET_PLATFORMS:
-        return handleGetPlatforms();
-      case MessageAction.SET_PLATFORMS:
-        return handleSetPlatforms(message as SetPlatformsMessage);
-      case MessageAction.ADD_PLATFORM:
-        return handleAddPlatform(message as AddPlatformMessage);
-      case MessageAction.UPDATE_PLATFORM:
-        return handleUpdatePlatform(message as UpdatePlatformMessage);
-      case MessageAction.CLEAR_STORAGE:
-        return handleClearStorage();
-      default:
-        throw new Error(`Unknown message action: ${action}`);
+    case MessageAction.WELCOME_COMPLETED:
+      return handleWelcomeCompleted();
+    case MessageAction.CLOSE_TAB:
+      return handleCloseTab();
+    case MessageAction.CLOSE_OPTIONS_PAGE:
+      return handleCloseOptionsPage();
+    case MessageAction.GET_TIME_SPENT:
+      return handleGetTimeSpent();
+    case MessageAction.GET_PLATFORMS:
+      return handleGetPlatforms();
+    case MessageAction.SET_PLATFORMS:
+      return handleSetPlatforms(message as SetPlatformsMessage);
+    case MessageAction.ADD_PLATFORM:
+      return handleAddPlatform(message as AddPlatformMessage);
+    case MessageAction.UPDATE_PLATFORM:
+      return handleUpdatePlatform(message as UpdatePlatformMessage);
+    case MessageAction.CLEAR_STORAGE:
+      return handleClearStorage();
+    case MessageAction.SYNC_THEME:
+      return; // This is handled by the frontend only no backend involvement required
+    default:
+      throw new Error(`Unknown message action: ${action}`);
     }
   } catch (error) {
     colorLog(`Error handling message: ${error}`, LogTypes.ERROR);
