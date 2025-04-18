@@ -16,12 +16,56 @@ export class StorageError extends Error {
 type StorageKey = keyof StorageData;
 
 /**
+ * Caching mechanism.
+ */
+let currentStorage: StorageData = null;
+const storageListeners: Array<(data: StorageData) => void> = [];
+
+/**
+ * Initializing storage state and setup the change listeners.
+ */
+export const initStorage = async () => {
+  if(currentStorage !== null) return;
+  const data = await getStorageData();
+  currentStorage = data;
+  colorLog("Storage initialized", LogTypes.SUCCESS);
+  chrome.storage.onChanged.addListener((changes, area : chrome.storage.AreaName) => {
+    if(area !== 'local') return;
+
+    if (changes.timeSpent) {
+      currentStorage.timeSpent = changes.timeSpent.newValue;
+    }
+    if (changes.platforms) {
+      currentStorage.platforms = changes.platforms.newValue;
+    }
+
+    notifyStorageListeners();
+  })
+}
+
+/**
+ * Gets the current in-memory snapshot
+ */
+export const getStorageSnapshot = () : StorageData => currentStorage;
+
+const notifyStorageListeners = () => {
+  storageListeners.forEach(cb => cb(currentStorage));
+};
+
+/**
+ * Subscribes to changes in the in-memory storage
+ */
+export const onStorageChange = (callback: (data: StorageData) => void) => {
+  storageListeners.push(callback);
+};
+
+/**
  * Asynchronous function to get the current storage data
  * @param keys - Optional array of keys to get from the storage
  * @returns Promise resolving to the current storage data
  * @throws {StorageError} If storage access fails
  */
-export const getStorageData = async <T extends StorageKey>(
+const getStorageData = async <T extends StorageKey>(
   keys?: T[]
 ): Promise<Pick<StorageData, T> | StorageData> => {
   try {
@@ -87,15 +131,17 @@ export const updateStorage = async (updates: Partial<StorageData>): Promise<void
  * @throws {StorageError} If update fails
  */
 export const setTimeSpent = async (timeSpent: TimeSpentData): Promise<void> => {
+  currentStorage.timeSpent = timeSpent;
   await updateStorage({ timeSpent });
 };
 
 /**
- * Sets the platforms list
+ * Sets the platforms list, to be used from welcome page only
  * @param platforms - New platforms list
  * @throws {StorageError} If update fails
  */
 export const setPlatforms = async (platforms: Platform[]): Promise<void> => {
+  currentStorage.platforms = platforms;
   await updateStorage({ platforms });
 };
 
@@ -105,12 +151,12 @@ export const setPlatforms = async (platforms: Platform[]): Promise<void> => {
  * @throws {StorageError} If update fails
  */
 export const addPlatform = async (platform: Platform): Promise<void> => {
-  const {platforms} = await getStorageData(['platforms']);
-  const isPlatformExist = platforms.some(p => p.url === platform.url);
+  const isPlatformExist = currentStorage.platforms.some(p => p.url.toLowerCase() === platform.url.toLowerCase());
   if(!isPlatformExist){
-    platforms.push(platform);
+    const updated = [...currentStorage.platforms, platform];
+    currentStorage.platforms = updated;
+    await updateStorage({ platforms: updated });
   }
-  await updateStorage({ platforms });
 };
 
 /**
@@ -119,16 +165,13 @@ export const addPlatform = async (platform: Platform): Promise<void> => {
  * @throws {StorageError} If platform not found or update fails
  */
 export const updatePlatform = async (platform: Platform): Promise<void> => {
-  const {platforms} = await getStorageData(['platforms']);
-  const index = platforms.findIndex(p => p.url === platform.url);
+  const index = currentStorage.platforms.findIndex(p => p.url.toLowerCase() === platform.url.toLowerCase());
   
   if (index === -1) {
     throw new StorageError('Platform not found');
   }
-  
-  const updatedPlatforms = [...platforms];
-  updatedPlatforms[index] = platform;
-  await updateStorage({ platforms: updatedPlatforms });
+  currentStorage.platforms[index] = platform;
+  await updateStorage({ platforms: currentStorage.platforms });
 };
 
 /**

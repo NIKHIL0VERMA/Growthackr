@@ -1,5 +1,5 @@
 import { ExtensionMessage, MessageAction, MessageResponse, AddPlatformMessage, UpdatePlatformMessage, SetPlatformsMessage } from '@src/shared/types/messages';
-import { updateStorage, getStorageData, addPlatform, updatePlatform, clearStorage, setPlatforms } from '../services/storage';
+import { updateStorage, addPlatform, updatePlatform, clearStorage, setPlatforms, getStorageSnapshot } from '../services/storage';
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
 
 /** 
@@ -79,16 +79,16 @@ const handleCloseOptionsPage = async (): Promise<MessageResponse> => {
  * Handles get time spent message
  */
 const handleGetTimeSpent = async (): Promise<MessageResponse> => {
-  const {timeSpent} = await getStorageData(['timeSpent']);
-  return { success: true, data: timeSpent };
+  const snapshot = getStorageSnapshot();
+  return { success: true, data: snapshot.timeSpent };
 };
 
 /**
  * Handles get platforms message
  */
 const handleGetPlatforms = async (): Promise<MessageResponse> => {
-  const {platforms} = await getStorageData(['platforms']);
-  return { success: true, data: platforms };
+  const snapshot = getStorageSnapshot();
+  return { success: true, data: snapshot.platforms };
 };
 
 const handleSetPlatforms = async (message : SetPlatformsMessage): Promise<MessageResponse> => {
@@ -102,6 +102,7 @@ const handleSetPlatforms = async (message : SetPlatformsMessage): Promise<Messag
 const handleAddPlatform = async (message: AddPlatformMessage): Promise<MessageResponse> => {
   if (message.platforms) {
     // Handle array of platforms
+    // Don't optimize with Promise.all as we are updating storage
     for (const platform of message.platforms) { 
       await addPlatform(platform);
     }

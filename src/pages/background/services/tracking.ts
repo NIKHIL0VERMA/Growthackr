@@ -1,22 +1,15 @@
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
 import { extractHostName, isValidPage } from "@src/shared/utils/utilities";
 import { blockSite } from "@pages/blocking";
-import { getStorageData, setTimeSpent } from "./storage";
-import { Platform, StorageData, TimeSpentData } from "../types/storage";
+import { getStorageSnapshot, initStorage, setTimeSpent } from "./storage";
 
 let currentDomain: string | null = null;
 let trackingInterval: ReturnType<typeof setInterval> | null = null;
 let saveInterval: ReturnType<typeof setInterval> | null = null;
 
-let platforms : Platform[] | null = null;
-let timeSpent : TimeSpentData | null = null;
-
-export const initializeTracking =  async () => {
+export const initializeTracking = async () => {
   try {
-    let storageData: StorageData = await getStorageData();
-    platforms = storageData.platforms;
-    timeSpent = storageData.timeSpent;
-
+    await initStorage();
     registerListeners();
     colorLog("Tracking initialized", LogTypes.SUCCESS);
   } catch (error) {
@@ -66,6 +59,7 @@ const startTimeTracking = (): void => {
     if (!currentDomain) return;
 
     try {
+      const {platforms, timeSpent} = getStorageSnapshot();
       const platform = platforms.find(p => p.url.toLowerCase() === currentDomain.toLowerCase());
 
       if (!platform) {
@@ -74,7 +68,7 @@ const startTimeTracking = (): void => {
         return;
       }
 
-      const today = new Date().toLocaleDateString('en-CA');;
+      const today = new Date().toLocaleDateString('en-CA');
       const domainTime = timeSpent[today] ?? {};
       const currentTime = domainTime[currentDomain] ?? 0;
 
@@ -91,6 +85,7 @@ const startTimeTracking = (): void => {
             target: { tabId: tab.id },
             func: blockSite
           });
+          update();
           stopTracking();
         }
       }
@@ -103,15 +98,18 @@ const startTimeTracking = (): void => {
 const startSaveInterval = (): void => {
   if (saveInterval) clearInterval(saveInterval);
 
-  saveInterval = setInterval(async () => {
-    try {
-      if (!currentDomain) return;
-      await setTimeSpent(timeSpent);
-    } catch (error) {
-      colorLog(`Save error: ${error}`, LogTypes.ERROR);
-    }
-  }, 5000);
+  saveInterval = setInterval(update, 5000);
 };
+
+const update = async () =>{
+  try {
+    if (!currentDomain) return;
+    let {timeSpent} = getStorageSnapshot();
+    await setTimeSpent({...timeSpent}); // shallow clone to trigger the reactivity of solidjs
+  } catch (error) {
+    colorLog(`Save error: ${error}`, LogTypes.ERROR);
+  }
+}
 
 const stopTracking = (): void => {
   colorLog("Stopping tracker!! Site shouldn't be tracked", LogTypes.INFO);

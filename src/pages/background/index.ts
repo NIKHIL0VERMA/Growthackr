@@ -1,5 +1,5 @@
 import { colorLog, LogTypes } from "@src/shared/utils/logger";
-import { updateStorage } from './services/storage';
+import { initStorage, updateStorage } from './services/storage';
 import { initializeTracking } from './services/tracking';
 import { handleMessage } from './listeners/message';
 import { ExtensionMessage } from '@src/shared/types/messages';
@@ -11,6 +11,19 @@ colorLog("Starting background script", LogTypes.INFO);
 self.onerror = (err) => {
   colorLog("Unhandled error: " + err, LogTypes.ERROR);
 };
+
+// Initialize services
+const initializeServices = async() => {
+  try {
+    await Promise.all([initStorage(), initializeTracking()]);
+    colorLog("All services initialized successfully", LogTypes.SUCCESS);
+  } catch (error) {
+    colorLog(`Failed to initialize services: ${error}`, LogTypes.ERROR);
+  }
+}
+
+// Start the application
+initializeServices();
 
 // Message handling
 chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendResponse) => {
@@ -42,19 +55,6 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     colorLog("Extension is updated", LogTypes.SUCCESS);
   }
 });
-
-// Initialize services
-function initializeServices() {
-  try {
-    initializeTracking();
-    colorLog("All services initialized successfully", LogTypes.SUCCESS);
-  } catch (error) {
-    colorLog(`Failed to initialize services: ${error}`, LogTypes.ERROR);
-  }
-}
-
-// Start the application
-initializeServices();
 
 // Additional event listeners
 chrome.runtime.onStartup.addListener(() => {

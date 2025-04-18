@@ -29,6 +29,7 @@ const manifest = defineManifest(async () => ({
     "webNavigation"
   ],
   host_permissions : ["<all_urls>"],
+  minimum_chrome_version: "102",
   icons: {
     "16": "icons/16x16.png",
     "34": "icons/34x34.png",

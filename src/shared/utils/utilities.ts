@@ -10,7 +10,7 @@ export const isValidPage = (tab: chrome.tabs.Tab | undefined): boolean => {
   if (
     (!tab.url.startsWith('http:') &&
         !tab.url.startsWith('https:') &&
-        !tab.url.startsWith('file:')) ||
+        !tab.url.startsWith('file:///')) ||
       tab.url.startsWith('chrome://') ||
       tab.url.startsWith('chrome-extension://') ||
       tab.url.startsWith('brave://')

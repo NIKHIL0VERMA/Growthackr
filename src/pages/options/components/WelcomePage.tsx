@@ -29,8 +29,8 @@ export function WelcomePage({ onComplete }) {
 
   const togglePlatform = (platform: Platform) => {
     setSelectedPlatforms((prev) => {
-      if (prev.some((p) => p.url === platform.url)) {
-        return prev.filter((p) => p.url !== platform.url)
+      if (prev.some((p) => p.url.toLowerCase() === platform.url.toLowerCase())) {
+        return prev.filter((p) => p.url.toLowerCase() !== platform.url.toLowerCase())
       } else {
         return [...prev, platform]
       }
@@ -80,7 +80,7 @@ export function WelcomePage({ onComplete }) {
 
   const handleEdit = (platform: Platform, index: number) => {
     setEditIndex(index)
-    setEditUrl(platform.url)
+    setEditUrl(platform.url.toLowerCase())
   }
 
   const saveEdit = (index: number) => {
@@ -172,7 +172,7 @@ export function WelcomePage({ onComplete }) {
 
               <PlatformList
                 platforms={popularPlatforms}
-                isSelected={(platform) => selectedPlatforms().some((p) => p.url === platform.url)}
+                isSelected={(platform) => selectedPlatforms().some((p) => p.url.toLowerCase() === platform.url.toLowerCase())}
                 onSelect={togglePlatform}
                 maxHeight="calc(70vh - 250px)"
                 />

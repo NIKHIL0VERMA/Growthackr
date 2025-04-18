@@ -1,82 +1,84 @@
-import { createSignal, createResource, createEffect, For, Show } from "solid-js"
+import { createSignal, createEffect, For, Show, onMount, createMemo } from "solid-js"
 import { ThemeSwitch } from "@src/components/common/ThemeSwitch"
 import { useTheme } from "@src/components/common/ThemeProvider"
 import { Button } from "@src/components/ui/Button"
 import "@styles/global.css"
 import "@pages/popup/index.css"
 import { CircularProgress } from "./CircularProgress"
-import { colorLog, LogTypes } from "@src/shared/utils/logger"
-import { MessageAction } from "@src/shared/types/messages"
+import { getStorageSnapshot, initStorage, onStorageChange } from "@src/pages/background/services/storage"
+import { Platform, StorageData, TimeSpentData } from "@src/pages/background/types/storage"
 
 /**
  * Main content component for the popup
  */
 export const UsageTracker = () => {
   const { isDarkMode } = useTheme()
-  const [todayUsage, setTodayUsage] = createSignal<{ [key: string]: number }>({})
   const [overallPercentage, setOverallPercentage] = createSignal(0)
   const [remainingTime, setRemainingTime] = createSignal({ hours: 0, minutes: 0 })
+  const [platforms, setPlatforms] = createSignal<Platform[]>([])
+  const [timeSpent, setTimeSpent] = createSignal<TimeSpentData>({})
+  const [isLoading, setIsLoading] = createSignal(true);
 
-  // Fetch platforms data
-  const [platforms] = createResource(async () => {
-    try {
-      const response = await chrome.runtime.sendMessage({
-        action: MessageAction.GET_PLATFORMS,
-      })
-      return response.data || []
-    } catch (error) {
-      colorLog("Error fetching platforms:" + error, LogTypes.ERROR);
-      return []
-    }
-  })
+  onMount(async () => {
+    await initStorage();
 
-  // Fetch time spent data
-  const [timeSpent] = createResource(async () => {
-    try {
-      const response = await chrome.runtime.sendMessage({
-        action: MessageAction.GET_TIME_SPENT,
-      })
-      return response.data || {}
-    } catch (error) {
-      colorLog("Error fetching time spent:" + error, LogTypes.ERROR);
-      return {}
-    }
-  })
+    const snapshot = getStorageSnapshot();
+
+    setPlatforms(snapshot.platforms);
+    setTimeSpent(snapshot.timeSpent);
+    setIsLoading(false);
+
+    onStorageChange((update : StorageData) => {
+      setPlatforms(update.platforms)
+      setTimeSpent(update.timeSpent)
+    });
+  });
+
+  const todayUsage = createMemo(() => {
+    const ts = timeSpent();
+    const today = new Date().toLocaleDateString('en-CA');
+    return ts[today] || {};
+  });
+  
+  const overallStats = createMemo(() => {
+    const today = todayUsage();
+    const platformsList = platforms();
+  
+    let totalSeconds = 0;
+    let totalLimit = 0;
+  
+    platformsList.forEach(platform => {
+      const seconds = today[platform.url.toLowerCase()] || 0;
+      totalSeconds += seconds;
+  
+      const limitInSeconds = platform.timeLimit.hours * 3600 + platform.timeLimit.minutes * 60;
+      totalLimit += limitInSeconds;
+    });
+  
+    const percentage = totalLimit > 0 ? Math.min(Math.round((totalSeconds / totalLimit) * 100), 100) : 0;
+    const remaining = Math.max(totalLimit - totalSeconds, 0);
+  
+    return {
+      percentage,
+      remainingHours: Math.floor(remaining / 3600),
+      remainingMinutes: Math.floor((remaining % 3600) / 60)
+    };
+  });
+  
 
   // Calculate usage data when resources are loaded
   createEffect(() => {
-    if (platforms.loading || timeSpent.loading) return
+    if (isLoading()) return;
+    const stats = overallStats();
+    setOverallPercentage(stats.percentage);
+    setRemainingTime({ hours: stats.remainingHours, minutes: stats.remainingMinutes });
+});
 
-    const today = new Date().toISOString().split("T")[0]
-    const todayData = timeSpent()?.[today] || {}
-    setTodayUsage(todayData)
-
-    // Calculate overall percentage and remaining time
-    let totalSeconds = 0
-    let totalLimit = 0
-
-    platforms().forEach((platform) => {
-      const seconds = todayData[platform.url] || 0
-      totalSeconds += seconds
-
-      const limitInSeconds = platform.timeLimit.hours * 60 * 60 + platform.timeLimit.minutes * 60
-      totalLimit += limitInSeconds
-    })
-
-    if (totalLimit > 0) {
-      const percentage = Math.min(Math.round((totalSeconds / totalLimit) * 100), 100)
-      setOverallPercentage(percentage)
-
-      const remainingSecs = Math.max(totalLimit - totalSeconds, 0)
-      const hours = Math.floor(remainingSecs / 3600)
-      const minutes = Math.floor((remainingSecs % 3600) / 60)
-      setRemainingTime({ hours, minutes })
-    }
-  })
 
   // Calculate platform usage percentage
-  const getPlatformPercentage = (platform) => {
-    const seconds = todayUsage()[platform.url] || 0
+  const getPlatformPercentage = (platform : Platform) => {
+    const usage = todayUsage();
+    const seconds = usage[platform.url.toLowerCase()] || 0
     const limitInSeconds = platform.timeLimit.hours * 60 * 60 + platform.timeLimit.minutes * 60
 
     if (limitInSeconds === 0) return 0
@@ -84,9 +86,8 @@ export const UsageTracker = () => {
   }
 
   // Format seconds to time string
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     if (!seconds) return "0m"
-
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
 
@@ -150,7 +151,7 @@ export const UsageTracker = () => {
           </h2>
 
           <Show
-            when={!platforms.loading}
+            when={!isLoading()}
             fallback={
               <div class="loading-indicator" aria-live="polite">
                 Loading platforms...
@@ -161,8 +162,8 @@ export const UsageTracker = () => {
               <ul class="platform-list" role="list">
                 <For each={platforms()}>
                   {(platform) => {
-                    const percentage = getPlatformPercentage(platform)
-                    const seconds = todayUsage()[platform.url] || 0
+                    const percentage = createMemo(() => getPlatformPercentage(platform));
+                    const seconds = createMemo(() => todayUsage()[platform.url.toLowerCase()] || 0);
 
                     return (
                       <li class="platform-item" role="listitem">
@@ -173,17 +174,17 @@ export const UsageTracker = () => {
                           <div class="platform-header">
                             <span class="platform-name">{platform.name}</span>
                             <span class="platform-time">
-                              {formatTime(seconds)} / {platform.timeLimit.hours}h {platform.timeLimit.minutes}m
+                              {formatTime(seconds())} / {platform.timeLimit.hours}h {platform.timeLimit.minutes}m
                             </span>
                           </div>
                           <div class="progress-container" aria-hidden="true">
                             <div
-                              class={`progress-bar ${percentage < 50 ? "good" : percentage < 80 ? "warning" : "danger"}`}
-                              style={{ width: `${percentage}%` }}
+                              class={`progress-bar ${percentage() < 50 ? "good" : percentage() < 80 ? "warning" : "danger"}`}
+                              style={{ width: `${percentage()}%` }}
                             ></div>
                           </div>
                           <span class="sr-only">
-                            {platform.name} usage: {percentage}% of daily limit
+                            {platform.name} usage: {percentage()}% of daily limit
                           </span>
                         </div>
                       </li>

@@ -1,5 +1,3 @@
-import { MessageAction } from "@src/shared/types/messages"
-
 /**
  * Blocks the current site by displaying an overlay message
  * that prevents further interaction with the site.
@@ -113,21 +111,16 @@ export const blockSite = () => {
   
     // Add to the document
     document.body.appendChild(blockingMessage)
-  
+
     // Add event listeners AFTER adding to DOM
     dismissButton.addEventListener("click", () => {
       blockingMessage.style.opacity = "0"
       setTimeout(() => {
-        chrome.runtime.sendMessage({ action: MessageAction.CLOSE_TAB })
+        chrome.runtime.sendMessage({ action: 'closeTab' })
       }, 300)
     })
-    const optionsUrl = chrome.runtime.getURL("src/pages/options/index.html");
     settingsButton.addEventListener("click", () => {
-      blockingMessage.style.opacity = "0"
-      setTimeout(() => {
-        chrome.runtime.sendMessage({ action: MessageAction.CLOSE_TAB });
-        window.open(optionsUrl, '_blank').focus();
-      }, 300)
+        chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
     })
   
     // Add escape key listener
