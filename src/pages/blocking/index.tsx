@@ -114,13 +114,10 @@ export const blockSite = () => {
 
     // Add event listeners AFTER adding to DOM
     dismissButton.addEventListener("click", () => {
-      blockingMessage.style.opacity = "0"
-      setTimeout(() => {
-        chrome.runtime.sendMessage({ action: 'closeTab' })
-      }, 300)
+      chrome.runtime.sendMessage({ action: 'closeTab' })
     })
     settingsButton.addEventListener("click", () => {
-        chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
+      chrome.runtime.sendMessage({action: "openOptionsPage"});
     })
   
     // Add escape key listener

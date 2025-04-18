@@ -1,3 +1,5 @@
+import { stringify } from "querystring";
+
 const COLORS = {
   Reset: "\x1b[0m",
   Bright: "\x1b[1m",
@@ -70,7 +72,7 @@ function colorLog(message, type : LogTypes) {
     break;
   }
 
-  log(cnsl, '\x20'+color+message);
+  log(cnsl, '\x20'+color+String(message));
 }
 
 

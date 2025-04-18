@@ -8,6 +8,7 @@ export enum MessageAction {
   WELCOME_COMPLETED = 'welcomeCompleted',
   CLOSE_TAB = 'closeTab',
   CLOSE_OPTIONS_PAGE = 'closeOptionsPage',
+  OPNE_OPTIONS_PAGE = 'openOptionsPage',
   GET_TIME_SPENT = 'getTimeSpent',
   GET_PLATFORMS = 'getPlatforms',
   SET_PLATFORMS = 'setPlatforms',
@@ -37,6 +38,13 @@ export interface WelcomeCompletedMessage extends BaseMessage {
  */
 export interface CloseTabMessage extends BaseMessage {
   action: MessageAction.CLOSE_TAB;
+}
+
+/**
+ * Message to close the options page
+ */
+export interface OpenOptionsPageMessage extends BaseMessage {
+  action: MessageAction.OPNE_OPTIONS_PAGE;
 }
 
 /**
@@ -109,6 +117,7 @@ export interface SyncThemeMessage extends BaseMessage {
 export type ExtensionMessage = 
   | WelcomeCompletedMessage
   | CloseTabMessage
+  | OpenOptionsPageMessage
   | CloseOptionsPageMessage
   | GetTimeSpentMessage
   | GetPlatformsMessage

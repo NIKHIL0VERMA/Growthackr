@@ -15,6 +15,8 @@ export const handleMessage = async (message: ExtensionMessage): Promise<MessageR
       return handleWelcomeCompleted();
     case MessageAction.CLOSE_TAB:
       return handleCloseTab();
+    case MessageAction.OPNE_OPTIONS_PAGE:
+      return handleOpenOptionsPage();
     case MessageAction.CLOSE_OPTIONS_PAGE:
       return handleCloseOptionsPage();
     case MessageAction.GET_TIME_SPENT:
@@ -62,6 +64,14 @@ const handleCloseTab = async (): Promise<MessageResponse> => {
   }
   return { success: false, error: `Couldn't close current tab with id ${tab?.id}` };
 };
+
+/**
+ * Handles open options page message
+ */
+const handleOpenOptionsPage = async () : Promise<MessageResponse> => {
+  chrome.runtime.openOptionsPage();
+  return {success : true};
+}
 
 /**
  * Handles close options page message
