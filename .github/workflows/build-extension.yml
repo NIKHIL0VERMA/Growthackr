@@ -1,0 +1,47 @@
+name: Build & Release Growthackr (.zip)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🧱 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: 🗜️ Zip the dist folder
+        run: |
+          cd dist
+          zip -r ../Growthackr.zip . 
+          cd ..
+
+      - name: 📝 Get latest commit message for release notes
+        id: changelog
+        run: |
+          echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Create GitHub Release and upload zip
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Growthackr ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.message }}
+          files: Growthackr.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
