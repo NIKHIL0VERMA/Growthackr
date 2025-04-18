@@ -55,7 +55,8 @@ export interface CloseOptionsPageMessage extends BaseMessage {
 }
 
 /**
- * Message to get time spent data
+ * Represents a message for retrieving time spent data.
+ * This message is used to request time tracking information from the background script.
  */
 export interface GetTimeSpentMessage extends BaseMessage {
   action: MessageAction.GET_TIME_SPENT;
@@ -129,6 +130,9 @@ export type ExtensionMessage =
 
 /**
  * Generic success response interface
+ * 
+ * This interface is like a trophy for successful operations! It tells us whether the operation was a hit or a miss.
+ * 
  * @template T - Type of the data returned
  */
 export interface SuccessResponse<T = unknown> {

@@ -1,5 +1,10 @@
 import { Platform } from "@src/pages/background/types/storage"
 
+/**
+ * An array of popular platforms that users love to spend their time on.
+ * 
+ * Jyda hi famous ho rhe h or time barbad kr rhe h, rokna to pdega hi
+ */
 export const popularPlatforms : Platform[] = [
   { name: "Facebook", url: "facebook.com", icon: "fa-facebook", timeLimit: {hours : 0, minutes: 15}, isCustom: false },
   { name: "YouTube", url: "youtube.com", icon: "fa-youtube", timeLimit: {hours : 0, minutes: 15}, isCustom: false },

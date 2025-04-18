@@ -16,7 +16,9 @@
 }
 
 .btn-primary:hover {
-  background-color: darken(var(--btn-primary-bg), 10%);
+  background-color: var(--btn-secondary-bg);
+  border: 1px solid var(--btn-outline-fg);
+  color: var(--btn-outline-fg);
   transform: translateY(-2px);
 }
 
@@ -26,7 +28,8 @@
 }
 
 .btn-secondary:hover {
-  background-color: darken(var(--btn-secondary-bg), 10%);
+  background-color: var(--btn-primary-bg);
+  border: 1px solid var(--btn-outline-fg);
   transform: translateY(-2px);
 }
 

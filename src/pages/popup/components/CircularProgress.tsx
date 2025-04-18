@@ -2,12 +2,6 @@ import { createMemo } from "solid-js"
 
 /**
  * Defines the properties for the CircularProgress component.
- * 
- * @property {number} percentage - The percentage value to display in the progress circle.
- * @property {number} [size=120] - The size of the progress circle in pixels.
- * @property {number} [strokeWidth=8] - The width of the progress circle's stroke in pixels.
- * @property {string} [color="var(--primary-color)"] - The color of the progress circle.
- * @property {string} [label="Usage progress"] - The label to display for the progress circle.
  */
 export type CircularProgressProps = {
   percentage: number
@@ -19,7 +13,6 @@ export type CircularProgressProps = {
 
 /**
  * CircularProgress component that displays a circular progress indicator
- * @param props - Component properties
  */
 export const CircularProgress = (props: CircularProgressProps) => {
   const size = () => props.size || 120

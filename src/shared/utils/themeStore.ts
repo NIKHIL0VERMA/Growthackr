@@ -43,7 +43,7 @@ export const createThemeStore = () => {
         theme: newTheme ? "dark" : "light",
       })
       .catch((err) => {
-        colorLog("Theme sync message failed, likely in development mode", LogTypes.ERROR);
+        colorLog(`Theme sync message failed cause ${err}` , LogTypes.ERROR);
       })
   }
 

@@ -43,12 +43,12 @@ chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendRes
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     colorLog("Extension is installed", LogTypes.INFO);
-    chrome.runtime.openOptionsPage();
     await updateStorage({
       timeSpent: {},
       platforms: [],
       welcome: true
     });
+    chrome.runtime.openOptionsPage();
   }
 
   if (details.reason === 'update' && !details.previousVersion) {

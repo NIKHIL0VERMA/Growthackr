@@ -2,12 +2,7 @@
  * Styles for the Platform Manager page
  * Defines layout, animations, and responsive behavior
  */
-
-
-
-
-
-
+ 
 .app-icon {
   width: 34px;
   height: 34px;
@@ -181,6 +176,7 @@
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -192,10 +188,12 @@
     transform: scale(0, 0);
     opacity: 0.5;
   }
+
   20% {
     transform: scale(25, 25);
     opacity: 0.5;
   }
+
   100% {
     opacity: 0;
     transform: scale(40, 40);

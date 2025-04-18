@@ -31,7 +31,8 @@
     "chrome": "readonly"
   },
   "ignorePatterns": [
-    "watch.js",
-    "dist/**"
+    "dist/",
+    "docs/",
+    "node_modules/"
   ]
 }

@@ -26,4 +26,3 @@ export function Input(props: InputProps) {
     </div>
   )
 }
-

@@ -16,4 +16,3 @@ export function Button(props: ButtonProps) {
     <button {...props} class={`${variantClasses[props.variant || "primary"]} ${props.class || ""}`} />
   )
 }
-

@@ -1,13 +1,15 @@
 {
-  "entryPoints": [
-    "src",
-    "test-utils",
-    "utils"
-  ],
+  "entryPoints": ["src/**/*.ts", "test-utils/**/*.ts"],
   "out": "docs",
-
   "tsconfig": "tsconfig.json",
-
+  "cleanOutputDir": true,
+  "commentStyle": "all",
+  "pretty": true,
+  "exclude": ["*.tsx", "src/global.d.ts", "src/manifest-type.ts", "src/manifest.ts", "src/vite-env.d.ts"],
+  "includeHierarchySummary": true,
+  "githubPages": true,
+  "favicon": "public/icons/512x512.png",
+  "entryPointStrategy": "expand",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,

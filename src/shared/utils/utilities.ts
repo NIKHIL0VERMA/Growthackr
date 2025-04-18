@@ -1,16 +1,18 @@
 /**
- * Checks if a given tab is valid for processing.
- * A tab is considered valid if it has a URL and an ID, and its URL does not start with 'chrome://' or 'chrome-extension://'.
- * @param tab - The tab to check.
- * @returns {boolean} - True if the tab is valid, false otherwise.
+ * Determines if a given tab is valid for processing.
+ * A tab is considered valid if it has a non-empty URL and a valid ID, 
+ * and its URL does not start with 'chrome://', 'chrome-extension://', or 'brave://'.
+ * 
+ * @param {chrome.tabs.Tab | undefined} tab - The tab to validate. Think of it as the bouncer at the club, checking IDs.
+ * @returns {boolean} - Returns true if the tab is valid; otherwise, false. Agar valid nahi hai, toh bye-bye!
  */
-export const isValidPage = (tab: chrome.tabs.Tab | undefined): boolean => {
+export const isValidTab = (tab: chrome.tabs.Tab | undefined): boolean => {
   if (!tab || !tab.url || !tab.id) return false;
   
   if (
     (!tab.url.startsWith('http:') &&
-        !tab.url.startsWith('https:') &&
-        !tab.url.startsWith('file:///')) ||
+      !tab.url.startsWith('https:') ||
+      tab.url.startsWith('file:///')) ||
       tab.url.startsWith('chrome://') ||
       tab.url.startsWith('chrome-extension://') ||
       tab.url.startsWith('brave://')
@@ -23,8 +25,9 @@ export const isValidPage = (tab: chrome.tabs.Tab | undefined): boolean => {
  * Extracts the hostname from a given URL.
  * If the URL is undefined or starts with 'file:', it returns the URL as is.
  * Otherwise, it extracts the hostname by splitting the URL and removing any 'www.' prefix.
- * @param url - The URL from which to extract the hostname.
- * @returns {string} - The extracted hostname.
+ * 
+ * @param {string | undefined} url - The URL from which to extract the hostname. It's like fishing for the main catch!
+ * @returns {string} - The extracted hostname. Agar kuch nahi mila, toh khud ko mat blame karo!
  */
 export const extractHostName = (url: string | undefined): string => {
   if (!url) return '';
@@ -47,8 +50,9 @@ export const extractHostName = (url: string | undefined): string => {
 /**
  * Removes the top-level domain (TLD) from a given hostname.
  * If the hostname has more than one part separated by a dot, it removes the last part.
- * @param hostname - The hostname from which to remove the TLD.
- * @returns {string} - The hostname with the TLD removed.
+ * 
+ * @param {string | undefined} hostname - The hostname from which to remove the TLD. It's like a haircut for your domain!
+ * @returns {string} - The hostname with the TLD removed. No more 'com' or 'net' on your head!
  */
 export const removeTLD = (hostname: string | undefined): string => {
   if (!hostname) return '';
@@ -63,8 +67,8 @@ export const removeTLD = (hostname: string | undefined): string => {
 /**
  * Validates if the provided URL is a valid web page URL (http or https).
  * 
- * @param {string} url - The URL to be validated.
- * @returns {boolean} - Returns true if the URL is valid, false otherwise.
+ * @param {string} url - The URL to be validated. It's like checking if your friend is actually at the party!
+ * @returns {boolean} - Returns true if the URL is valid, false otherwise. If not valid, they're definitely not on the guest list!
  */
 export const validateUrl = (url: string | undefined): boolean => {
   if (!url) return false;

@@ -1,4 +1,3 @@
-
 import { For, Show } from "solid-js"
 import type { Platform } from "@src/pages/background/types/storage"
 
