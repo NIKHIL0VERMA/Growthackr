@@ -1,7 +1,10 @@
-# Growthackr  
-![License](https://img.shields.io/badge/license-MIT-blue)  
-![Latest Version](https://img.shields.io/github/v/release/NIKHIL0VERMA/Growthackr?style=flat-square&color=purple)  
+# Growthackr
+
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![Latest Version](https://img.shields.io/github/v/release/NIKHIL0VERMA/Growthackr?style=for-the-badge&color=purple)](https://github.com/NIKHIL0VERMA/Growthackr/releases)
 [![Download Growthackr](https://img.shields.io/github/downloads/NIKHIL0VERMA/Growthackr/total.svg?label=Download%20ZIP&style=for-the-badge)](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr.zip)
+[![Upvote on Product Hunt](https://img.shields.io/badge/Product%20Hunt-Upvote%20Growthackr-%23da552f?style=for-the-badge&logo=product-hunt&logoColor=white)](https://www.producthunt.com/products/growthackr)
+[![Docs](https://img.shields.io/badge/docs-Growthackr-blueviolet?style=for-the-badge&logo=readthedocs&logoColor=white)](https://nikhil0verma.github.io/Growthackr/)
 
 **Track. Limit. Grow.**  
 
@@ -9,11 +12,21 @@ Build on KISS principle. \
 Growthackr helps you reclaim control of your time online by monitoring and limiting your usage on platforms like Facebook, YouTube, and Instagram — all from a clean, intuitive Chrome extension.
 
 ---
+---
+
+## 📦 Usage
+
+1. Click the Growthackr icon in your browser
+2. Scroll down and click `Advanced Settings`
+2. Set time limits for each platform
+3. Use your browser — Growthackr runs silently in the background
+4. You can check usage from dashboard
+5. Platforms will be blocked when your time is up
 
 ## 📸 Preview & Demo
 
 ### Demo and installation
-[![Watch Demo](showcase/Blocking.png)](showcase/demo.mp4)
+[![Watch the Demo](https://img.youtube.com/vi/3ACxSlxko9M/0.jpg)](https://youtu.be/3ACxSlxko9M)
 
 ### Dashboard (Dark Mode)
 ![Dashboard Dark](showcase/Dashboard_Dark.png)
@@ -62,10 +75,29 @@ If got enough users or stars, I may release it to chrome web store
 
 ---
 
+## 📦 Usage
+
+1. Click the Growthackr icon in your browser
+2. Scroll down and click `Advanced Settings`
+2. Set time limits for each platform
+3. Use your browser — Growthackr runs silently in the background
+4. You can check usage from dashboard
+5. Platforms will be blocked when your time is up
+
+---
+
+## 📚 Documentation
+
+Looking to dive deeper into the codebase, understand architecture, or contribute?
+
+Check out the full developer documentation here:  
+👉 [https://nikhil0verma.github.io/Growthackr/](https://nikhil0verma.github.io/Growthackr/)
+
+---
+
 ## 👨‍💻 Development Setup
 
-### 1. Clone the Repository
-```bash
+### 1. Clone the Repository```bash
 git clone https://github.com/NIKHIL0VERMA/Growthackr.git
 cd Growthackr
 ```
@@ -98,17 +130,6 @@ npm run build
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
-
----
-
-## 📦 Usage
-
-1. Click the Growthackr icon in your browser
-2. Scroll down and click `Advanced Settings`
-2. Set time limits for each platform
-3. Use your browser — Growthackr runs silently in the background
-4. You can check usage from dashboard
-5. Platforms will be blocked when your time is up
 
 ---
 
