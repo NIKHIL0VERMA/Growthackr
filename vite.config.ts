@@ -7,7 +7,8 @@ import manifest from "./src/manifest";
 const root = resolve(__dirname, "src");
 const pagesDir = resolve(root, "pages");
 const stylesDir = resolve(root, "styles");
-const outDir = resolve(__dirname, "dist");
+const outDirDev = resolve(__dirname, "dist", "debug");
+const outDirRelease = resolve(__dirname, "dist", "release");
 const publicDir = resolve(__dirname, "public");
 const utilsDir = resolve(__dirname, "utils");
 
@@ -25,9 +26,9 @@ export default defineConfig({
   },
   publicDir,
   build: {
-    outDir,
+    outDir: isDev ? outDirDev : outDirRelease,
     sourcemap: isDev,
-    minify: isDev ? false: true,
+    minify: isDev ? false : true,
     rollupOptions: {
       // input: {
       //   devtools: resolve(pagesDir, "devtools", "index.html"),

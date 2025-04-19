@@ -4,6 +4,13 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      releaseTitle: { description: 'Release title' }
+      releaseDescription: { description: 'Release description' }
+
+permissions:
+  contents: write
 
 jobs:
   build-and-release:
@@ -11,24 +18,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
-      - name: 🧱 Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 📦 Install dependencies and build
-        run: |
-          npm ci
-          npm run build
-
-      - name: 🗜️ Zip the dist folder
+      - name: 🚧 Zip Debug and Stable releases
         run: |
           cd dist
-          zip -r ../Growthackr.zip . 
+          zip -r ../Growthackr-Debug.zip debug
+          zip -r ../Growthackr-Stable.zip release
           cd ..
 
       - name: 📝 Get latest commit message for release notes
@@ -36,12 +32,26 @@ jobs:
         run: |
           echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
-      - name: 🚀 Create GitHub Release and upload zip
+      - name: 🚀 Create GitHub Release for Debug and upload zip
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: Growthackr ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.message }}
-          files: Growthackr.zip
+          draft: false
+          generate_release_notes: true
+          name: ${{ github.event.inputs.releaseTitle || format('Growthackr Debug {0}', github.ref_name) }}
+          body: ${{ github.event.inputs.releaseDescription || steps.changelog.outputs.message }}
+          files: Growthackr-Debug.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Create GitHub Release for Stable and upload zip
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          generate_release_notes: true
+          name: ${{ github.event.inputs.releaseTitle || format('Growthackr Stable {0}', github.ref_name) }}
+          body: ${{ github.event.inputs.releaseDescription || steps.changelog.outputs.message }}
+          files: Growthackr-Stable.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

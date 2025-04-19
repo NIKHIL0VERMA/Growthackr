@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Growthackr",
+  "version": "1.0.0.0",
+  "description": "Take control of your time and start being productive. Track social media usage and develop good habits",
+  "options_page": "src/pages/options/index.html",
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/pages/popup/index.html",
+    "default_icon": "icons/34x34.png",
+    "default_title": "Growthackr"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "unlimitedStorage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "minimum_chrome_version": "102",
+  "icons": {
+    "16": "icons/16x16.png",
+    "34": "icons/34x34.png",
+    "48": "icons/48x48.png",
+    "128": "icons/128x128.png",
+    "192": "icons/192x192.png",
+    "512": "icons/512x512.png"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "resources": [
+        "assets/*.js",
+        "assets/*.css",
+        "icons/*",
+        "styles/*"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}

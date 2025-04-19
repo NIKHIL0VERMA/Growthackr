@@ -1,9 +1,17 @@
 # Growthackr
 
-[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![Latest Version](https://img.shields.io/github/v/release/NIKHIL0VERMA/Growthackr?style=for-the-badge&color=purple)](https://github.com/NIKHIL0VERMA/Growthackr/releases)
-[![Download Growthackr](https://img.shields.io/github/downloads/NIKHIL0VERMA/Growthackr/total.svg?label=Download%20ZIP&style=for-the-badge)](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr.zip)
+<!-- 📦 Project Info -->
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=open-source-initiative&logoColor=white)](LICENSE)
+[![Latest Version](https://img.shields.io/github/v/release/NIKHIL0VERMA/Growthackr?style=for-the-badge&color=purple&logo=github)](https://github.com/NIKHIL0VERMA/Growthackr/releases)
+
+<!-- 🔽 Downloads -->
+[![Download User Build](https://img.shields.io/badge/Download-User--Build-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr-Stable.zip)
+[![Download Debug Build](https://img.shields.io/badge/Download-Debug--Build-purple?style=for-the-badge&logo=cog&logoColor=white)](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr-Debug.zip)
+
+<!-- 📣 Promotion -->
 [![Upvote on Product Hunt](https://img.shields.io/badge/Product%20Hunt-Upvote%20Growthackr-%23da552f?style=for-the-badge&logo=product-hunt&logoColor=white)](https://www.producthunt.com/products/growthackr)
+
+<!-- 📚 Docs -->
 [![Docs](https://img.shields.io/badge/docs-Growthackr-blueviolet?style=for-the-badge&logo=readthedocs&logoColor=white)](https://nikhil0verma.github.io/Growthackr/)
 
 **Track. Limit. Grow.**  
@@ -50,14 +58,20 @@ Growthackr helps you reclaim control of your time online by monitoring and limit
 ## 🚀 Installation
 
 ### Option 1: Manual Install from GitHub Release
+You can manually install Growthackr using either of the following builds:
 
+- 🧑‍🎓 **[Stable Build](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr-Stable.zip)** — for everyday users  
+- 🧑‍💻 **[Debug Build](https://github.com/NIKHIL0VERMA/Growthackr/releases/latest/download/Growthackr-Debug.zip)** — for checking log to report bug
+
+### 🛠 Installation Steps (Both Builds)
 1. Go to the **[Releases](https://github.com/NIKHIL0VERMA/Growthackr/releases)** tab.
-2. Download the latest `Growthackr.zip` file.
+2. Download the latest choose `.zip` file.
 3. Extract the ZIP to a folder.
 4. Open Chrome and go to `chrome://extensions/`
 5. Enable **Developer Mode** (toggle switch in the top right).
 6. Click **"Load unpacked"** and select the extracted folder.
 
+Need installation help ? \
 Follow demo after extracting zip
 
 ### Option 2: Chrome Web Store
@@ -97,7 +111,8 @@ Check out the full developer documentation here:
 
 ## 👨‍💻 Development Setup
 
-### 1. Clone the Repository```bash
+### 1. Clone the Repository
+```bash
 git clone https://github.com/NIKHIL0VERMA/Growthackr.git
 cd Growthackr
 ```
@@ -170,4 +185,5 @@ This project is licensed under the [MIT License](LICENSE).
 ## 📬 Contact
 
 **Author**: [Nikhil Verma](mailto:nikhil2003verma@gmail.com)  
-Found a bug or have feedback? Open an issue or reach out!
+🐛 Found a bug? Open an [issue](https://github.com/NIKHIL0VERMA/Growthackr/issues)  
+💬 Want to chat? Ping me on [Twitter](https://twitter.com/nikhil0verma)
