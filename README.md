@@ -34,7 +34,11 @@ Growthackr helps you reclaim control of your time online by monitoring and limit
 ## 📸 Preview & Demo
 
 ### Demo and installation
-[![Watch the Demo](https://img.youtube.com/vi/3ACxSlxko9M/0.jpg)](https://youtu.be/3ACxSlxko9M)
+
+
+https://github.com/user-attachments/assets/e5fae9b2-81c0-4ce6-a6b4-c030377af35b
+
+
 
 ### Dashboard (Dark Mode)
 ![Dashboard Dark](showcase/Dashboard_Dark.png)
