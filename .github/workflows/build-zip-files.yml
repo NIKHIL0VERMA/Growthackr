@@ -32,17 +32,7 @@ jobs:
         run: |
           echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
-      - name: 🔍 Check if release with tag already exists
-        id: check_tag
-        run: |
-          TAG_EXISTS=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} | jq -r .message)
-          if [ "$TAG_EXISTS" != "Not Found" ]; then
-            echo "Tag ${GITHUB_REF} already exists, skipping release creation."
-            exit 0
-          fi
-
       - name: 🚀 Create GitHub Release and upload Debug and Stable zip assets
-        if: steps.check_tag.outcome != 'success'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
@@ -50,8 +40,6 @@ jobs:
           generate_release_notes: true
           name: ${{ github.event.inputs.releaseTitle || format('Growthackr {0}', github.ref_name) }}
           body: ${{ github.event.inputs.releaseDescription || steps.changelog.outputs.message }}
-          files: |
-            Growthackr-Debug.zip
-            Growthackr-Stable.zip
+          files: Growthackr-Debug.zip Growthackr-Stable.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
