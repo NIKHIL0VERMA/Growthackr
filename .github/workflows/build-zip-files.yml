@@ -35,11 +35,12 @@ jobs:
       - name: 🚀 Create GitHub Release and upload Debug and Stable zip assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
           draft: false
           generate_release_notes: true
           name: ${{ github.event.inputs.releaseTitle || format('Growthackr {0}', github.ref_name) }}
           body: ${{ github.event.inputs.releaseDescription || steps.changelog.outputs.message }}
-          files: Growthackr-Debug.zip Growthackr-Stable.zip
+          files: |
+            Growthackr-Debug.zip
+            Growthackr-Stable.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
